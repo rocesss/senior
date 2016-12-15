@@ -1,5 +1,6 @@
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -95,94 +96,94 @@ public class Model {
 		}
 		driver.navigate().to(url);
 		
+		ArrayList<String> filepath = this.getFilePath("all");
 		
-		List<WebElement> formTag = driver.findElements(By.tagName("form"));		
-
-		if(formTag.size() <= 0){
-			System.out.println("Not have form fill!!");
+		if(filepath.size() <= 0){
+			System.out.println("File cannot found!!");
 		}else{
-			try{
-				ArrayList<String> filepath = this.getFilePath("all");
+			try {
+				int counterFormTag;
+				int[] counterInputTag;
+				ArrayList<String> script = new ArrayList<String>();
+						
+				BufferedReader reader;
+				String temp;
 				
-				if(filepath.size() <= 0){
-					System.out.println("File cannot found!!");
-				}else{
+				List<WebElement> formTag;
+				List<WebElement> inputTag;
+				
+				for(String path : filepath){				
+					reader = new BufferedReader(new FileReader(path));				
+					while((temp = reader.readLine()) != null){
+						script.add(temp);
+					}
+					reader.close();
 					
-					List<WebElement> inputTag;
-					int[] counterInputTag;
-					ArrayList<String> script;
+					counterFormTag = 0;
+					counterInputTag = null;
 					
-					BufferedReader reader;
-					String temp;
-					
-					for(WebElement form : formTag){
-						inputTag = form.findElements(By.cssSelector("input[type='text'],input[type='password'],textarea"));
+					while(true){
+						formTag = driver.findElements(By.tagName("form"));
 						
-						if(inputTag.size() <= 0) continue;
+						if(counterFormTag >= formTag.size()) break;
 						
-						counterInputTag = new int[inputTag.size()];
-						script = new ArrayList<String>();
-												
-						for(String path : filepath){
-							reader = new BufferedReader(new FileReader(path));
-							while((temp = reader.readLine()) != null){
-								script.add(temp);
-							}
-							reader.close();
-							
-							boolean checkCounter = true;
-							
-							while(checkCounter){
-								System.out.println(inputTag.size());
-								for(int i = 0; i < inputTag.size(); i++){
-									System.out.println(inputTag.get(i).getTagName());
-									inputTag.get(i).sendKeys(script.get(counterInputTag[i]));
-									System.out.println(script.get(counterInputTag[i]));
-								}
-								System.out.println("");
-								for(int i = counterInputTag.length-1; i >= 0; i--){
-									if(counterInputTag[i] == script.size()-1){
-										counterInputTag[i] = 0;
-										if(i == 0) checkCounter = false;
-									}else{
-										counterInputTag[i]++;
-										break;
-									}
-									
-								}
-								
-								form.submit();
-								try {
-									Thread.sleep(1000);
-								} catch (InterruptedException e) {
-									e.printStackTrace();
-								}
-								this.waitForLoad();
-								
-								driver.navigate().to(url);
-								try {
-									Thread.sleep(5000);
-								} catch (InterruptedException e) {
-									e.printStackTrace();
-								}
-								jse.executeScript("console.log('abc')");
-								System.out.println(driver.getClass().getName());
-							}
-							
-							script.clear();
-							
+						inputTag = formTag.get(counterFormTag).findElements(By.cssSelector("input[type='text'],input[type='password'],textarea"));
+						
+						if(inputTag.size() <= 0){
+							counterFormTag++;
+							continue;
 						}
+						
+						if(counterInputTag == null){
+							counterInputTag = new int[inputTag.size()];
+						}
+											
+						System.out.println(inputTag.size());
+						for(int i = 0; i < inputTag.size(); i++){
+							System.out.println(inputTag.get(i).getTagName());
+							inputTag.get(i).sendKeys(script.get(counterInputTag[i]));
+							System.out.println(script.get(counterInputTag[i]));
+						}
+						System.out.println("");
+						
+						formTag.get(counterFormTag).submit();
+						try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+						
+						for(int i = counterInputTag.length-1; i >= 0; i--){
+							if(counterInputTag[i] == script.size()-1){
+								counterInputTag[i] = 0;
+								if(i == 0){
+									counterFormTag++;
+									counterInputTag = null;
+								}
+							}else{
+								counterInputTag[i]++;
+								break;
+							}
+										
+						}
+												
+						this.waitForLoad();
+						
+						driver.navigate().to(url);					
 					}
 					
-				}
-				
-			}catch(IOException e){
-				e.printStackTrace();
-			}
-		}
+					script.clear();
+								
+				}	
 
-		System.out.println(formTag.size());
-		//driver.quit();
+				//driver.quit();
+				
+			} catch (FileNotFoundException e1) {
+				e1.printStackTrace();
+			} catch (IOException e2) {
+				e2.printStackTrace();
+			}
+		}	
 	}
 	
 //    public long calculate(long number1, long number2, String operator) {
