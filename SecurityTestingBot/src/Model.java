@@ -8,6 +8,7 @@ import java.util.*;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -26,7 +27,7 @@ public class Model {
 	
 	private void setInitiate(){
 		driver = new FirefoxDriver();
-		driverWait = new WebDriverWait(driver, 5);
+		driverWait = new WebDriverWait(driver, 10);
 		jse = (JavascriptExecutor)driver;
 	}
 	
@@ -69,25 +70,25 @@ public class Model {
 	}
 	
 	private void waitForLoad() {
-	    driverWait.until((ExpectedCondition<Boolean>) d ->
-	            ((JavascriptExecutor) d).executeScript("return document.readyState").equals("complete"));
+//	    driverWait.until((ExpectedCondition<Boolean>) d ->
+//	            ((JavascriptExecutor) d).executeScript("return document.readyState").equals("complete"));
 		
-//		ExpectedCondition<Boolean> pageLoader = new ExpectedCondition<Boolean>() {
-//			public Boolean apply(WebDriver wd){
-//				String state = (String)(((JavascriptExecutor) wd).executeScript("return document.readyState"));
-//				boolean status = false;
-//				int i = 0;
-//				System.out.println(i++);
-//				if(!status && state.equals("interactive")){
-//					status = true;
-//				}else if(status && state.equals("complete")){
-//					return true;
-//				}
-//					
-//				return false;
-//			}
-//		};
-//		driverWait.until(pageLoader);
+		ExpectedCondition<Boolean> pageLoader = new ExpectedCondition<Boolean>() {
+			boolean status = false;
+
+			public Boolean apply(WebDriver wd){
+				String state = (String)(((JavascriptExecutor) wd).executeScript("return document.readyState"));	
+				
+				if((!status && state.equals("loading")) || (!status && state.equals("interactive"))){
+					status = true;
+				}else if(status && state.equals("complete")){
+					return true;
+				}
+					
+				return false;
+			}
+		};
+		driverWait.until(pageLoader);
 	}
 	
 	public void runSecurityTesting(String url){
@@ -147,11 +148,6 @@ public class Model {
 						System.out.println("");
 						
 						formTag.get(counterFormTag).submit();
-						try {
-							Thread.sleep(1000);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
 						
 						for(int i = counterInputTag.length-1; i >= 0; i--){
 							if(counterInputTag[i] == script.size()-1){
@@ -166,9 +162,13 @@ public class Model {
 							}
 										
 						}
-												
-						this.waitForLoad();
 						
+						try{
+							this.waitForLoad();
+						} catch(TimeoutException e) {
+							System.out.println("Timeout for loading page");
+						}
+												
 						driver.navigate().to(url);					
 					}
 					
