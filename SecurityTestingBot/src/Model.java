@@ -21,52 +21,10 @@ public class Model {
 	private WebDriverWait driverWait;
 	private JavascriptExecutor jse;
 	
-	public Model(){
-		System.setProperty("webdriver.gecko.driver", "C:\\My Program\\SeleniumHQ\\SeleniumDriver\\geckodriver-v0.11.1-win64\\geckodriver.exe");    	
-	}
-	
 	private void setInitiate(){
 		driver = new FirefoxDriver();
-		driverWait = new WebDriverWait(driver, 10);
+		driverWait = new WebDriverWait(driver, 30);
 		jse = (JavascriptExecutor)driver;
-	}
-	
-	private ArrayList<String> getFilePathFromType(String path){
-		File folder = new File(path);
-		ArrayList<String> filepath = new ArrayList<String>();
-		
-		if(folder.exists()){
-			for(File file : folder.listFiles()){
-				if(file.isDirectory()){
-					filepath.addAll(getFilePathFromType(file.getPath()));
-				}else if(file.isFile()){
-					filepath.add(file.getPath());
-				}
-			}
-		}
-				
-		return filepath;		
-	}
-	
-	private ArrayList<String> getFilePath(String type){
-		ArrayList<String> filepath = new ArrayList<String>();
-		
-		switch(type){
-		case "sqli": 
-			filepath  = getFilePathFromType(Paths.get("").toAbsolutePath().toString() 
-					+ "//src//PenetrationScript//SQLInjection");
-			break;
-		case "xss":
-			filepath  = getFilePathFromType(Paths.get("").toAbsolutePath().toString() 
-					+ "//src//PenetrationScript//XSS");
-			break;
-		case "all":
-			filepath  = getFilePathFromType(Paths.get("").toAbsolutePath().toString() 
-					+ "//src//PenetrationScript");
-			break;
-		}
-		
-		return filepath;				
 	}
 	
 	private void waitForLoad() {
@@ -83,12 +41,12 @@ public class Model {
 				
 				
 				
-				String a = ""+(jse.executeScript("var xhttp = new XMLHttpRequest();"
-						+ "return xhttp.getAllResponseHeaders();"
-						+ "if (xhttp.readyState == 4 && xhttp.status == 200) {"
-						+ "return this.responseText;"
-						+ "}"));
-				System.out.println(a);
+//				String a = ""+(jse.executeScript("var xhttp = new XMLHttpRequest();"
+//						+ "return xhttp.getAllResponseHeaders();"
+//						+ "if (xhttp.readyState == 4 && xhttp.status == 200) {"
+//						+ "return this.responseText;"
+//						+ "}"));
+//				System.out.println(a);
 				
 				
 				
@@ -104,13 +62,14 @@ public class Model {
 		driverWait.until(pageLoader);
 	}
 	
-	public void runSecurityTesting(String url){
+	public void runSecurityTesting(String url, String framework, HashSet<String> attack){
 		if(driver == null){
 			this.setInitiate();
 		}
 		driver.navigate().to(url);
 		
-		ArrayList<String> filepath = this.getFilePath("all");
+		FileManager filemanager = new FileManager();
+		ArrayList<String> filepath = filemanager.getSelectedFilePath("all");
 		
 		if(filepath.size() <= 0){
 			System.out.println("File cannot found!!");
@@ -198,23 +157,5 @@ public class Model {
 			}
 		}	
 	}
-	
-//    public long calculate(long number1, long number2, String operator) {
-//        switch (operator) {
-//            case "+":
-//                return number1 + number2;
-//            case "-":
-//                return number1 - number2;
-//            case "*":
-//                return number1 * number2;
-//            case "/":
-//                if (number2 == 0)
-//                    return 0;
-//
-//                return number1 / number2;
-//        }
-//
-//        System.out.println("Unknown operator - " + operator);
-//        return 0;
-//    }
+
 }

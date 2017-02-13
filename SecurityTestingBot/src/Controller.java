@@ -1,61 +1,54 @@
-import javafx.event.ActionEvent;
+import java.util.HashSet;
+
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 
 public class Controller {
-
-//    @FXML
-//    private Text output;
-//
-//    private long number1 = 0;
-//    private String operator = "";
-//    private boolean start = true;
 	
 	@FXML
 	private TextField url;
-
-    private Model model = new Model();
+	@FXML
+	private ComboBox<String> framework;
+	@FXML
+	private CheckBox sqli;
+	@FXML
+	private CheckBox xss;
+	@FXML
+	private Button btn;
+	
+	private Model model = new Model();
+	
+	@FXML
+	private void checkBeforeTesting(){
+		if(url.getText().length() > 0 && framework.getValue() != null && 
+				(sqli.isSelected() || xss.isSelected())){
+			btn.setDisable(false);
+		}else{
+			btn.setDisable(true);
+		}
+	}
     
     @FXML
     private void penetrationTest(){
     	String web = url.getText();
+    	String selectedFramework = framework.getValue();
+    	HashSet<String> selectedAttack = new HashSet<String>();
+    	
+    	if(sqli.isSelected()){
+    		selectedAttack.add("sqli");
+    	}
+    	if(xss.isSelected()){
+    		selectedAttack.add("xss");
+    	}
+    	
     	if(web.indexOf("http://") < 0 && web.indexOf("https://") < 0){
     		web = "http://" + web;
     	}
-    	
-    	model.runSecurityTesting(web);
+    	System.out.println(selectedFramework);
+    	model.runSecurityTesting(web, selectedFramework, selectedAttack);
     }
-
-//    @FXML
-//    private void processNumpad(ActionEvent event) {
-//        if (start) {
-//            output.setText("");
-//            start = false;
-//        }
-//
-//        String value = ((Button)event.getSource()).getText();
-//        output.setText(output.getText() + value);
-//    }
-//
-//    @FXML
-//    private void processOperator(ActionEvent event) {
-//        String value = ((Button)event.getSource()).getText();
-//
-//        if (!"=".equals(value)) {
-//            if (!operator.isEmpty())
-//                return;
-//
-//            operator = value;
-//            number1 = Long.parseLong(output.getText());
-//            output.setText("");
-//        }
-//        else {
-//            if (operator.isEmpty())
-//                return;
-//
-//            output.setText(String.valueOf(model.calculate(number1, Long.parseLong(output.getText()), operator)));
-//            operator = "";
-//            start = true;
-//        }
-//    }
+    
 }
