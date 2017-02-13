@@ -73,11 +73,24 @@ public class Model {
 //	    driverWait.until((ExpectedCondition<Boolean>) d ->
 //	            ((JavascriptExecutor) d).executeScript("return document.readyState").equals("complete"));
 		
+		
 		ExpectedCondition<Boolean> pageLoader = new ExpectedCondition<Boolean>() {
 			boolean status = false;
+			
 
 			public Boolean apply(WebDriver wd){
 				String state = (String)(((JavascriptExecutor) wd).executeScript("return document.readyState"));	
+				
+				
+				
+				String a = ""+(jse.executeScript("var xhttp = new XMLHttpRequest();"
+						+ "return xhttp.getAllResponseHeaders();"
+						+ "if (xhttp.readyState == 4 && xhttp.status == 200) {"
+						+ "return this.responseText;"
+						+ "}"));
+				System.out.println(a);
+				
+				
 				
 				if((!status && state.equals("loading")) || (!status && state.equals("interactive"))){
 					status = true;
