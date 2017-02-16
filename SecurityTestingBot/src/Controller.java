@@ -1,5 +1,3 @@
-import java.util.HashSet;
-
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -35,20 +33,27 @@ public class Controller {
     private void penetrationTest(){
     	String web = url.getText();
     	String selectedFramework = framework.getValue();
-    	HashSet<String> selectedAttack = new HashSet<String>();
-    	
-    	if(sqli.isSelected()){
-    		selectedAttack.add("sqli");
-    	}
-    	if(xss.isSelected()){
-    		selectedAttack.add("xss");
-    	}
     	
     	if(web.indexOf("http://") < 0 && web.indexOf("https://") < 0){
     		web = "http://" + web;
     	}
-    	System.out.println(selectedFramework);
-    	model.runSecurityTesting(web, selectedFramework, selectedAttack);
+    	
+    	switch(selectedFramework){
+    	case "Joomla" : 
+    		if(sqli.isSelected()) model.testSQLiJoomla(web);
+    		if(xss.isSelected()) model.testXSSJoomla(web);
+    		break;
+    	case "Wordpress" :
+    		if(sqli.isSelected()) model.testSQLiWordpress(web);
+    		if(xss.isSelected()) model.testXSSWordpress(web);
+    		break;
+    	case "Drupal" :
+    		if(sqli.isSelected()) model.testSQLiDrupal(web);
+    		if(xss.isSelected()) model.testXSSDrupal(web);
+    		break;
+    	}
+
+//    	model.runSecurityTesting(web, selectedFramework, selectedAttack);
     }
     
 }

