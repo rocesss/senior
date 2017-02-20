@@ -18,7 +18,8 @@ public class App extends Application {
     
     private static void setSystemProperty(){
     	System.setProperty("glass.accessible.force", "false");
-    	System.setProperty("webdriver.gecko.driver", "C:\\My Program\\SeleniumHQ\\SeleniumDriver\\geckodriver-v0.11.1-win64\\geckodriver.exe"); 
+//    	System.setProperty("webdriver.gecko.driver", "C:\\My Program\\SeleniumHQ\\SeleniumDriver\\geckodriver-v0.11.1-win64\\geckodriver.exe"); 
+    	System.setProperty("phantomjs.binary.path", "C:\\My Program\\SeleniumHQ\\SeleniumDriver\\phantomjs-2.1.1-windows\\bin\\phantomjs.exe");
     }
 
     public static void main(String[] args) {

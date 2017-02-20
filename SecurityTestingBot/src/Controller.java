@@ -17,8 +17,6 @@ public class Controller {
 	@FXML
 	private Button btn;
 	
-	private Model model = new Model();
-	
 	@FXML
 	private void checkBeforeTesting(){
 		if(url.getText().length() > 0 && framework.getValue() != null && 
@@ -38,22 +36,11 @@ public class Controller {
     		web = "http://" + web;
     	}
     	
-    	switch(selectedFramework){
-    	case "Joomla" : 
-    		if(sqli.isSelected()) model.testSQLiJoomla(web);
-    		if(xss.isSelected()) model.testXSSJoomla(web);
-    		break;
-    	case "Wordpress" :
-    		if(sqli.isSelected()) model.testSQLiWordpress(web);
-    		if(xss.isSelected()) model.testXSSWordpress(web);
-    		break;
-    	case "Drupal" :
-    		if(sqli.isSelected()) model.testSQLiDrupal(web);
-    		if(xss.isSelected()) model.testXSSDrupal(web);
-    		break;
-    	}
-
-//    	model.runSecurityTesting(web, selectedFramework, selectedAttack);
+    	QueueTesting qt = new QueueTesting(web);
+    	if(sqli.isSelected()) qt.addQueue(selectedFramework + "-sqli");
+		if(xss.isSelected()) qt.addQueue(selectedFramework + "-xss");
+		
+		qt.start();
     }
     
 }

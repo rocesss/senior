@@ -1,12 +1,7 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -16,57 +11,76 @@ import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class Model {
 
 	private WebDriver driver;
-	private WebDriverWait driverWait;
-	private JavascriptExecutor jse;
+//	private WebDriverWait driverWait;
+//	private JavascriptExecutor jse;
+	
+	private volatile boolean testRunning = false;
 	
 	private void setInitiate(){
 		if(driver == null){
-			driver = new FirefoxDriver();
-			driverWait = new WebDriverWait(driver, 30);
-			jse = (JavascriptExecutor)driver;
+//			driver = new FirefoxDriver();
+			driver = new PhantomJSDriver();
+//			driverWait = new WebDriverWait(driver, 30);
+//			jse = (JavascriptExecutor)driver;
 		}
 	}
 	
-	private void waitForLoad() {
-//	    driverWait.until((ExpectedCondition<Boolean>) d ->
-//	            ((JavascriptExecutor) d).executeScript("return document.readyState").equals("complete"));
-		
-		
-		ExpectedCondition<Boolean> pageLoader = new ExpectedCondition<Boolean>() {
-			boolean status = false;
-			
-
-			public Boolean apply(WebDriver wd){
-				String state = (String)(((JavascriptExecutor) wd).executeScript("return document.readyState"));	
-				
-				
-				
-//				String a = ""+(jse.executeScript("var xhttp = new XMLHttpRequest();"
-//						+ "return xhttp.getAllResponseHeaders();"
-//						+ "if (xhttp.readyState == 4 && xhttp.status == 200) {"
-//						+ "return this.responseText;"
-//						+ "}"));
-//				System.out.println(a);
-				
-				
-				
-				if((!status && state.equals("loading")) || (!status && state.equals("interactive"))){
-					status = true;
-				}else if(status && state.equals("complete")){
-					return true;
-				}
-					
-				return false;
-			}
-		};
-		driverWait.until(pageLoader);
+	public void closeDriver(){
+		if(driver != null){
+			driver.quit();
+			driver = null;
+		}	
 	}
+	
+	public boolean getTestRunning(){
+		return testRunning;
+	}
+	
+	public void setTestRunning(boolean run){
+		testRunning = run;
+	}
+	
+//	private void waitForLoad() {
+////	    driverWait.until((ExpectedCondition<Boolean>) d ->
+////	            ((JavascriptExecutor) d).executeScript("return document.readyState").equals("complete"));
+//		
+//		
+//		ExpectedCondition<Boolean> pageLoader = new ExpectedCondition<Boolean>() {
+//			boolean status = false;
+//			
+//
+//			public Boolean apply(WebDriver wd){
+//				String state = (String)(((JavascriptExecutor) wd).executeScript("return document.readyState"));	
+//				
+//				
+//				
+////				String a = ""+(jse.executeScript("var xhttp = new XMLHttpRequest();"
+////						+ "return xhttp.getAllResponseHeaders();"
+////						+ "if (xhttp.readyState == 4 && xhttp.status == 200) {"
+////						+ "return this.responseText;"
+////						+ "}"));
+////				System.out.println(a);
+//				
+//				
+//				
+//				if((!status && state.equals("loading")) || (!status && state.equals("interactive"))){
+//					status = true;
+//				}else if(status && state.equals("complete")){
+//					return true;
+//				}
+//					
+//				return false;
+//			}
+//		};
+//		driverWait.until(pageLoader);
+//	}
 	
 //	public void runSecurityTesting(String url, String framework, HashSet<String> attack){
 //	
@@ -172,55 +186,70 @@ public class Model {
 		return index >= 0 ? url.substring(0, index) : url;
 	}
 	
-	public String getCurrentDateTime(){
+	private String getCurrentDateTime(){
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
 		String date = sdf.format(new Date());
 		return date;
 	}
 	
-	public void testSQLiJoomla(String url){
-//		this.setInitiate();
-		url = this.getOnlyHostName(url);
-		FileManager filemanager = new FileManager();
-		filemanager.setReader("Joomla//SQLInjection");
-		filemanager.setWriter("log" + (filemanager.numberOfFile() + 1) + ".txt");
+	public void testSQLiJoomla(String fullUrl){		
+		this.setInitiate();
+		final String url = getOnlyHostName(fullUrl);
 		
-		String temp;
+		this.setTestRunning(true);
 		
-		URL web;
-		HttpURLConnection http;
-		
-		filemanager.writeLine("================================================================");
-		filemanager.writeLine(url + " " + getCurrentDateTime());
-		filemanager.writeLine("================================================================");
-		
-		while((temp = filemanager.readLineAllFile()) != null){
-			System.out.println(url + temp);
-			
-//			driver.navigate().to(url + temp);
-			
-			try {
-				web = new URL(url + temp);
-				http = (HttpURLConnection)web.openConnection();
-				int statusCode = http.getResponseCode();
-				String statusMessage = http.getResponseMessage();
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
 
-				filemanager.writeLine(temp + "\t" + statusCode + " " + statusMessage);
+				FileManager filemanager = new FileManager();
+				filemanager.setReader("Joomla//SQLInjection");
+				filemanager.setWriter("Joomla-SQLi-log" + (filemanager.numberOfFile() + 1) + ".txt");
 				
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
+				String temp;
+				
+				URL web;
+				HttpURLConnection http;
+				
+				filemanager.writeLine("================================================================");
+				filemanager.writeLine(url + " " + getCurrentDateTime());
+				filemanager.writeLine("================================================================");
+				
+				while((temp = filemanager.readLineAllFile()) != null){
+					System.out.println(url + temp);
+					
+					try {
+						web = new URL(url + temp);
+						http = (HttpURLConnection)web.openConnection();
+						int statusCode = http.getResponseCode();
+						String statusMessage = http.getResponseMessage();
+						
+						driver.get(url + temp);
+						String title = driver.getTitle();
+						
+						filemanager.writeLine(temp);
+						filemanager.writeLine("Header : " + statusCode + " " + statusMessage);
+						filemanager.writeLine("Title : " + title);
+						
+					} catch (MalformedURLException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					
+				}
+				
+				filemanager.close();
+				
+				setTestRunning(false);
 			}
-			
-		}
-		
-		filemanager.close();
-		
+		}).start();
 	}
 	
 	public void testXSSJoomla(String url){
+		this.setTestRunning(true);
 		System.out.println("This is testXSSJoomla method but have no content.");
+		this.setTestRunning(false);
 	}
 	
 	public void testSQLiWordpress(String url){
