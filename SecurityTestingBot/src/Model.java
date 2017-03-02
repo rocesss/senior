@@ -261,107 +261,80 @@ public class Model {
 		}).start();
 	}
 	
-	
-	
-	private void isAlertPresent(){
-	
-		JavascriptExecutor js = (JavascriptExecutor) driver;
-	
-		String alert = "window.alertMsg = 'no'; window.alert = function(msg){window.alertMsg = msg;};";
-		js.executeScript(alert);
+	private boolean isAlertPresent(){
 		
-	    WebDriverWait wait = new WebDriverWait(driver, 10);
-	    ExpectedCondition<Boolean> pageAlert = new ExpectedCondition<Boolean>() {
-	    	
-			@Override
-			public Boolean apply(WebDriver wd) {
-				String checkXss = (String) js.executeScript("return window.alertMsg");
-				System.out.println(checkXss);
-				return checkXss.equalsIgnoreCase("xss");
+		boolean alert = false;
+		
+		//-----------------------  VERSION 1 : Check only Number  ----------------------------------
+		
+//		alert = driver.findElements(By.xpath("//*[@data-xss='xss']")).size() > 0 ||
+//				driver.findElements(By.xpath("//script[.='alert(/xss/)']")).size() > 0;
+		
+		//-----------------------  VERSION 2 : Check Click XSS  ------------------------------------
+		
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+		String alertXSSMsg = "window.alertXSSMsg = 'no'; window.alert = function(msg){window.alertXSSMsg = msg;};";
+		js.executeScript(alertXSSMsg);
+		
+		if(driver.findElements(By.xpath("//script[.='alert(/xss/)']")).size() > 0){
+			alert = true;
+		}
+		else if(driver.findElements(By.xpath("//*[@data-xss='xss']")).size() > 0){
+			
+			try{
+				
+				driver.findElement(By.xpath("//*[@data-xss='xss']")).click();
+				String checkXss = (String) js.executeScript("return window.alertXSSMsg");
+				
+				if(checkXss.equalsIgnoreCase("xss")) alert = true;
+
 			}
-		};
-	    
-		wait.until(pageAlert);
+			catch(Exception e){
+				System.out.println(e.getMessage());
+			}
+			
+		}
+		
+		return alert;
 	}
-	
-	
-	
 	
 	public void testXSSJoomla(String fullUrl, final int numLog){
 		this.setInitiate();
-//		final String url = getOnlyHostName(fullUrl);
-		System.out.println("Start Driver");
-		driver.get(fullUrl);
-	
-		
-		System.out.println("End Driver");
-		System.out.println("Start Alert");
-		
-//		JavascriptExecutor js = (JavascriptExecutor) driver;
-//		
-//		String alert = "window.alertMsg = 'no'; window.alert = function(msg){window.alertMsg = msg;};";
-//		js.executeScript(alert);
-		
-		System.out.println("End Alert");
+		final String url = getOnlyHostName(fullUrl);
 
-		System.out.println("Start");
-		int a = driver.findElements(By.xpath("//*[@data-xss='xss']")).size(); 
-		int b =	driver.findElements(By.xpath("//script[.='alert(/xss/)']")).size();
-		System.out.println(a + " " + b);
-//		driver.findElement(By.xpath("//*[@data-xss='xss']")).click();
-//		
-//		String checkXss = (String) js.executeScript("return window.alertMsg");
-//		
-//		System.out.println(checkXss);
-//		File srcFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-//		try {
-//			FileUtils.copyFile(srcFile, new File("E:\\sample.jpg"),true);
-//		} catch (IOException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
+		this.setTestRunning(true);
 		
-//		try{
-//			this.isAlertPresent();
-//		}catch(TimeoutException e){
-//			System.out.println("Timeout");
-//		}
-		
-		
-		System.out.println("End");
- 
-		
-//		this.setTestRunning(true);
-//		
-//		new Thread(new Runnable() {
-//			@Override
-//			public void run() {
-//
-//				FileManager filemanager = new FileManager();
-//				filemanager.setReader("Joomla//XSS");
-//				filemanager.setWriter("Joomla-log" + (numLog + 1) + ".txt");
-//				
-//				String temp;
-//				
-//				filemanager.writeLine("================================================================");
-//				filemanager.writeLine(url + " Cross-site Script " + getCurrentDateTime());
-//				filemanager.writeLine("================================================================");
-//				
-//				while((temp = filemanager.readLineAllFile()) != null){
-//					System.out.println(url + temp);
-//						
-//					driver.get(url + temp);
-//					
-//						
-//					filemanager.writeLine(temp);
-//					
-//				}
-//				
-//				filemanager.close();
-//				
-//				setTestRunning(false);
-//			}
-//		}).start();
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+
+				FileManager filemanager = new FileManager();
+				filemanager.setReader("Joomla//XSS");
+				filemanager.setWriter("Joomla-log" + (numLog + 1) + ".txt");
+				
+				String temp;
+				
+				filemanager.writeLine("================================================================");
+				filemanager.writeLine(url + " Cross-site Script " + getCurrentDateTime());
+				filemanager.writeLine("================================================================");
+				
+				while((temp = filemanager.readLineAllFile()) != null){
+					System.out.println(url + temp);
+						
+					driver.get(url + temp);
+					
+					boolean alert = isAlertPresent();
+					
+					filemanager.writeLine(temp);
+					if(alert) filemanager.writeLine("Yes");
+					else filemanager.writeLine("No");			
+				}
+				
+				filemanager.close();
+				
+				setTestRunning(false);
+			}
+		}).start();
 	}
 	
 	public void testSQLiWordpress(String url, final int numLog){
