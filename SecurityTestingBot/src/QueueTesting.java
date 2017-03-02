@@ -20,26 +20,28 @@ public class QueueTesting implements Runnable{
 		
 		this.addQueue("stop");
 		
+		int numlogfile = FileManager.numberOfLogFile();
+		
 		while(!q.isEmpty()){
 			if(!model.getTestRunning()){
 				switch(q.poll()){
 				case "Joomla-sqli":
-					model.testSQLiJoomla(fullUrl);
+					model.testSQLiJoomla(fullUrl, numlogfile);
 					break;
 				case "Joomla-xss":
-					model.testXSSJoomla(fullUrl);
+					model.testXSSJoomla(fullUrl, numlogfile);
 					break;
 				case "Wordpress-sqli":
-					model.testSQLiWordpress(fullUrl);
+					model.testSQLiWordpress(fullUrl, numlogfile);
 					break;
 				case "Wordpress-xss":
-					model.testXSSWordpress(fullUrl);
+					model.testXSSWordpress(fullUrl, numlogfile);
 					 break;
 				case "Drupal-sqli":
-					model.testSQLiDrupal(fullUrl);
+					model.testSQLiDrupal(fullUrl, numlogfile);
 					break;
 				case "Drupal-xss":
-					model.testXSSDrupal(fullUrl);
+					model.testXSSDrupal(fullUrl, numlogfile);
 					break;
 				default: 
 				}

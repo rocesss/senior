@@ -1,3 +1,6 @@
+import java.awt.AWTException;
+import java.awt.Robot;
+import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -5,14 +8,24 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.By.ByXPath;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoAlertPresentException;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.Point;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
+
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class Model {
@@ -192,7 +205,9 @@ public class Model {
 		return date;
 	}
 	
-	public void testSQLiJoomla(String fullUrl){		
+	
+	
+	public void testSQLiJoomla(String fullUrl, final int numLog){		
 		this.setInitiate();
 		final String url = getOnlyHostName(fullUrl);
 		
@@ -204,7 +219,7 @@ public class Model {
 
 				FileManager filemanager = new FileManager();
 				filemanager.setReader("Joomla//SQLInjection");
-				filemanager.setWriter("Joomla-SQLi-log" + (filemanager.numberOfFile() + 1) + ".txt");
+				filemanager.setWriter("Joomla-log" + (numLog + 1) + ".txt");
 				
 				String temp;
 				
@@ -212,7 +227,7 @@ public class Model {
 				HttpURLConnection http;
 				
 				filemanager.writeLine("================================================================");
-				filemanager.writeLine(url + " " + getCurrentDateTime());
+				filemanager.writeLine(url + " SQL Injection " + getCurrentDateTime());
 				filemanager.writeLine("================================================================");
 				
 				while((temp = filemanager.readLineAllFile()) != null){
@@ -246,25 +261,122 @@ public class Model {
 		}).start();
 	}
 	
-	public void testXSSJoomla(String url){
-		this.setTestRunning(true);
-		System.out.println("This is testXSSJoomla method but have no content.");
-		this.setTestRunning(false);
+	
+	
+	private void isAlertPresent(){
+	
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+	
+		String alert = "window.alertMsg = 'no'; window.alert = function(msg){window.alertMsg = msg;};";
+		js.executeScript(alert);
+		
+	    WebDriverWait wait = new WebDriverWait(driver, 10);
+	    ExpectedCondition<Boolean> pageAlert = new ExpectedCondition<Boolean>() {
+	    	
+			@Override
+			public Boolean apply(WebDriver wd) {
+				String checkXss = (String) js.executeScript("return window.alertMsg");
+				System.out.println(checkXss);
+				return checkXss.equalsIgnoreCase("xss");
+			}
+		};
+	    
+		wait.until(pageAlert);
 	}
 	
-	public void testSQLiWordpress(String url){
+	
+	
+	
+	public void testXSSJoomla(String fullUrl, final int numLog){
+		this.setInitiate();
+//		final String url = getOnlyHostName(fullUrl);
+		System.out.println("Start Driver");
+		driver.get(fullUrl);
+	
+		
+		System.out.println("End Driver");
+		System.out.println("Start Alert");
+		
+//		JavascriptExecutor js = (JavascriptExecutor) driver;
+//		
+//		String alert = "window.alertMsg = 'no'; window.alert = function(msg){window.alertMsg = msg;};";
+//		js.executeScript(alert);
+		
+		System.out.println("End Alert");
+
+		System.out.println("Start");
+		int a = driver.findElements(By.xpath("//*[@data-xss='xss']")).size(); 
+		int b =	driver.findElements(By.xpath("//script[.='alert(/xss/)']")).size();
+		System.out.println(a + " " + b);
+//		driver.findElement(By.xpath("//*[@data-xss='xss']")).click();
+//		
+//		String checkXss = (String) js.executeScript("return window.alertMsg");
+//		
+//		System.out.println(checkXss);
+//		File srcFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+//		try {
+//			FileUtils.copyFile(srcFile, new File("E:\\sample.jpg"),true);
+//		} catch (IOException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
+		
+//		try{
+//			this.isAlertPresent();
+//		}catch(TimeoutException e){
+//			System.out.println("Timeout");
+//		}
+		
+		
+		System.out.println("End");
+ 
+		
+//		this.setTestRunning(true);
+//		
+//		new Thread(new Runnable() {
+//			@Override
+//			public void run() {
+//
+//				FileManager filemanager = new FileManager();
+//				filemanager.setReader("Joomla//XSS");
+//				filemanager.setWriter("Joomla-log" + (numLog + 1) + ".txt");
+//				
+//				String temp;
+//				
+//				filemanager.writeLine("================================================================");
+//				filemanager.writeLine(url + " Cross-site Script " + getCurrentDateTime());
+//				filemanager.writeLine("================================================================");
+//				
+//				while((temp = filemanager.readLineAllFile()) != null){
+//					System.out.println(url + temp);
+//						
+//					driver.get(url + temp);
+//					
+//						
+//					filemanager.writeLine(temp);
+//					
+//				}
+//				
+//				filemanager.close();
+//				
+//				setTestRunning(false);
+//			}
+//		}).start();
+	}
+	
+	public void testSQLiWordpress(String url, final int numLog){
 		System.out.println("This is testSQLiWordpress method but have no content.");
 	}
 	
-	public void testXSSWordpress(String url){
+	public void testXSSWordpress(String url, final int numLog){
 		System.out.println("This is testXSSWordpress method but have no content.");
 	}
 	
-	public void testSQLiDrupal(String url){
+	public void testSQLiDrupal(String url, final int numLog){
 		System.out.println("This is testSQLiDrupal method but have no content.");
 	}
 	
-	public void testXSSDrupal(String url){
+	public void testXSSDrupal(String url, final int numLog){
 		System.out.println("This is testXSSDrupal method but have no content.");
 	}
 

