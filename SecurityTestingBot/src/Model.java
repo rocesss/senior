@@ -248,6 +248,8 @@ public class Model {
 						e.printStackTrace();
 					} catch (IOException e) {
 						e.printStackTrace();
+					} catch (Exception e){
+						e.printStackTrace();
 					}
 					
 				}
@@ -259,43 +261,41 @@ public class Model {
 		}).start();
 	}
 	
-	private boolean isAlertPresent(){
+	private int isAlertPresent(){
+		/*
+		 * 
+		 * alert = 0 Nothing happen
+		 * alert = 1 Scripts are placed in html
+		 * alert = 2 Scripts are interpreted 
+		 *  
+		 * */
 		
-		boolean alert = false;
-		
-		//-----------------------  VERSION 1 : Check only Number  ----------------------------------
-		
-//		alert = driver.findElements(By.xpath("//*[@data-xss='xss']")).size() > 0 ||
-//				driver.findElements(By.xpath("//script[.='alert(/xss/)']")).size() > 0;
-		
-		//-----------------------  VERSION 2 : Check Click XSS  ------------------------------------
+		int alert = 0;
 		
 		JavascriptExecutor js = (JavascriptExecutor) driver;
 		String alertXSSMsg = "window.alertXSSMsg = 'no'; window.alert = function(msg){window.alertXSSMsg = msg;};";
 		js.executeScript(alertXSSMsg);
 		
-		if(driver.findElements(By.xpath("//script[.='alert(/xss/)']")).size() > 0){
-			alert = true;
+		try{
+			
+			if(driver.findElements(By.xpath("//script[.='alert(/xss/)']")).size() > 0){
+				alert = 2;
+			}
+			else if(driver.findElements(By.xpath("//*[@data-xss='xss']")).size() > 0){
+			
+					alert++;
+					
+					WebElement element = driver.findElement(By.xpath("//*[@data-xss='xss']"));
+					js.executeScript("arguments[0].click();", element);
+					
+					String checkXss = (String) js.executeScript("return window.alertXSSMsg");
+					
+					if(checkXss.equalsIgnoreCase("xss")) alert++;
+			}
+			
 		}
-		else if(driver.findElements(By.xpath("//*[@data-xss='xss']")).size() > 0){
-			
-			try{
-				
-//				driver.findElement(By.xpath("//*[@data-xss='xss']")).click();
-				
-				//--------------------- Click Hidden Element ------------------------------
-				WebElement element = driver.findElement(By.xpath("//*[@data-xss='xss']"));
-				js.executeScript("arguments[0].click();", element);
-				
-				String checkXss = (String) js.executeScript("return window.alertXSSMsg");
-				
-				if(checkXss.equalsIgnoreCase("xss")) alert = true;
-
-			}
-			catch(Exception e){
-				System.out.println(e.getMessage());
-			}
-			
+		catch(Exception e){
+			System.out.println(e.getMessage());
 		}
 		
 		return alert;
@@ -323,14 +323,35 @@ public class Model {
 				
 				while((temp = filemanager.readLineAllFile()) != null){
 					System.out.println(url + temp);
+					
+					try{
 						
-					driver.get(url + temp);
-					
-					boolean alert = isAlertPresent();
-					
-					filemanager.writeLine(temp);
-					if(alert) filemanager.writeLine("Yes");
-					else filemanager.writeLine("No");			
+						driver.get(url + temp);
+						
+						int alert = isAlertPresent();
+						
+						filemanager.writeLine(temp);
+						
+						switch(alert){
+						case 0: 
+							filemanager.writeLine("No-Risk");
+							break;
+						case 1:
+							filemanager.writeLine("Risk No");
+							break;
+						case 2:
+							filemanager.writeLine("Risk Yes");
+							break;
+						default: 
+							filemanager.writeLine("No-Risk");
+							break;
+						}
+						
+					}
+					catch(Exception e){
+						System.out.println(e.getMessage());
+					}
+							
 				}
 				
 				filemanager.close();
