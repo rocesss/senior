@@ -205,8 +205,6 @@ public class Model {
 		return date;
 	}
 	
-	
-	
 	public void testSQLiJoomla(String fullUrl, final int numLog){		
 		this.setInitiate();
 		final String url = getOnlyHostName(fullUrl);
@@ -283,7 +281,12 @@ public class Model {
 			
 			try{
 				
-				driver.findElement(By.xpath("//*[@data-xss='xss']")).click();
+//				driver.findElement(By.xpath("//*[@data-xss='xss']")).click();
+				
+				//--------------------- Click Hidden Element ------------------------------
+				WebElement element = driver.findElement(By.xpath("//*[@data-xss='xss']"));
+				js.executeScript("arguments[0].click();", element);
+				
 				String checkXss = (String) js.executeScript("return window.alertXSSMsg");
 				
 				if(checkXss.equalsIgnoreCase("xss")) alert = true;
