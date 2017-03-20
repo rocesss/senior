@@ -361,6 +361,50 @@ public class Model {
 		}).start();
 	}
 	
+	private int resultTesting(String url, String check, String typeQuery){
+		
+		int result = 0;
+		int len = check.length();
+		
+		String specialChar = ",";
+		String specialEncodeChar = "%2C";
+		
+		try{
+			
+			driver.get(url);
+			String sourcePage = driver.getPageSource();		
+			
+			for(int index = sourcePage.indexOf(check), lastIndex = 0; index >= 0; index = sourcePage.indexOf(check, index + len)){
+				
+				String text = sourcePage.substring(lastIndex, index);
+
+				if(text.indexOf("UNION") < 0 && text.indexOf("SELECT") < 0 
+						&& text.lastIndexOf(specialChar) < (text.length() - specialChar.length())
+						&& text.lastIndexOf(specialEncodeChar) < (text.length() - specialEncodeChar.length())){	
+					
+					switch(typeQuery){
+					case "queryWithOutQuot":
+						result = 1;
+						break;
+					case "queryWithQuot":
+						result = 2;
+						break;
+					default :
+					}
+					
+					break;			
+				}
+				
+				lastIndex = index + len;
+			}
+			
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+				
+		return result;
+	}
+		
 	public void testSQLiWordpress(String fullUrl, final int numLog){
 		this.setInitiate();
 		final String url = getOnlyHostName(fullUrl);
@@ -393,37 +437,26 @@ public class Model {
 					try {
 						
 						String tempColumn = "";
-						String sourcePage = "";
-						int resultTesting = 0;
+						int result = 0;
 						
 						for(int i = 1; i <= numOfColumn; i++){
 							
 							tempColumn += checkWPSQLi;
 							
-							driver.get(url + temp + query + tempColumn + endQuery);
-							sourcePage = driver.getPageSource();
+							result = resultTesting(url + temp + query + tempColumn + endQuery, checkWPSQLi, "queryWithOutQuot");
+							if(result > 0) break;
 							
-							if(sourcePage.indexOf(checkWPSQLi) >= 0){
-								resultTesting = 1;
-								break;
-							}
-							
-							driver.get(url + temp + queryWithQuot + tempColumn + endQuery);
-							sourcePage = driver.getPageSource();
-							
-							if(sourcePage.indexOf(checkWPSQLi) >= 0){
-								resultTesting = 2;
-								break;
-							}
+							result = resultTesting(url + temp + queryWithQuot + tempColumn + endQuery, checkWPSQLi, "queryWithQuot");
+							if(result > 0) break;
 							
 							tempColumn += ",";
 							
 						}
 
-						if(resultTesting == 0){
+						if(result == 0){
 							filemanager.writeLine(temp);
 							filemanager.writeLine("No");						
-						} else if(resultTesting == 1){
+						} else if(result == 1){
 							filemanager.writeLine(temp + query + tempColumn + endQuery);
 							filemanager.writeLine("Yes");						
 						} else {
