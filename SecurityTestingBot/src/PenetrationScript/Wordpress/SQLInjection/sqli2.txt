@@ -57,7 +57,6 @@
 /wp-content/plugins/wp-cal/functions/editevent.php?id=
 /wp-content/plugins/fgallery/fim_rss.php?album=
 /?page_id=115&forumaction=showprofile&user=
-/index.php?exact=1&sentence=1&s=
 /index.php?poll=
 /index.php?category=
 /?archive&ctg=

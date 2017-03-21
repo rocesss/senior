@@ -366,8 +366,7 @@ public class Model {
 		int result = 0;
 		int len = check.length();
 		
-		String specialChar = ",";
-		String specialEncodeChar = "%2C";
+		String[] specialChar = {",","%2C","%252C"};
 		
 		try{
 			
@@ -378,9 +377,10 @@ public class Model {
 				
 				String text = sourcePage.substring(lastIndex, index);
 
-				if(text.indexOf("UNION") < 0 && text.indexOf("SELECT") < 0 
-						&& text.lastIndexOf(specialChar) < (text.length() - specialChar.length())
-						&& text.lastIndexOf(specialEncodeChar) < (text.length() - specialEncodeChar.length())){	
+				if( text.indexOf("UNION") < 0 && text.indexOf("SELECT") < 0 
+						&& text.lastIndexOf(specialChar[0]) < (text.length() - specialChar[0].length())
+						&& text.lastIndexOf(specialChar[1]) < (text.length() - specialChar[1].length())
+						&& text.lastIndexOf(specialChar[2]) < (text.length() - specialChar[2].length()) ){	
 					
 					switch(typeQuery){
 					case "queryWithOutQuot":
