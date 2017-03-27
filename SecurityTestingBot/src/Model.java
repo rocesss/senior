@@ -1,6 +1,3 @@
-import java.awt.AWTException;
-import java.awt.Robot;
-import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -8,25 +5,13 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
-import org.openqa.selenium.By.ByXPath;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.NoAlertPresentException;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.Point;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
 
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+
 
 public class Model {
 
@@ -278,19 +263,19 @@ public class Model {
 		
 		try{
 			
-			if(driver.findElements(By.xpath("//script[.='alert(/xss/)']")).size() > 0){
+			if(driver.findElements(By.xpath("//script[.='alert(123)']")).size() > 0){
 				alert = 2;
 			}
-			else if(driver.findElements(By.xpath("//*[@data-xss='xss']")).size() > 0){
+			else if(driver.findElements(By.xpath("//*[@data-xss]")).size() > 0){
 			
 					alert++;
 					
-					WebElement element = driver.findElement(By.xpath("//*[@data-xss='xss']"));
+					WebElement element = driver.findElement(By.xpath("//*[@data-xss]"));
 					js.executeScript("arguments[0].click();", element);
 					
-					String checkXss = (String) js.executeScript("return window.alertXSSMsg");
+					String checkXss = "" +  js.executeScript("return window.alertXSSMsg");
 					
-					if(checkXss.equalsIgnoreCase("xss")) alert++;
+					if(checkXss.equals("123")) alert++;
 			}
 			
 		}
@@ -477,8 +462,64 @@ public class Model {
 		}).start();
 	}
 	
-	public void testXSSWordpress(String url, final int numLog){
-		System.out.println("This is testXSSWordpress method but have no content.");
+	public void testXSSWordpress(String fullUrl, final int numLog){
+		this.setInitiate();
+		final String url = getOnlyHostName(fullUrl);
+
+		this.setTestRunning(true);
+		
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+
+				FileManager filemanager = new FileManager();
+				filemanager.setReader("Wordpress//XSS");
+				filemanager.setWriter("Wordpress-log" + (numLog + 1) + ".txt");
+				
+				String temp;
+				
+				filemanager.writeLine("================================================================");
+				filemanager.writeLine(url + " Cross-site Script " + getCurrentDateTime());
+				filemanager.writeLine("================================================================");
+				
+				while((temp = filemanager.readLineAllFile()) != null){
+					System.out.println(url + temp);
+					
+					try{
+						
+						driver.get(url + temp);
+						
+						int alert = isAlertPresent();
+						
+						filemanager.writeLine(temp);
+						
+						switch(alert){
+						case 0: 
+							filemanager.writeLine("No-Risk");
+							break;
+						case 1:
+							filemanager.writeLine("Risk No");
+							break;
+						case 2:
+							filemanager.writeLine("Risk Yes");
+							break;
+						default: 
+							filemanager.writeLine("No-Risk");
+							break;
+						}
+						
+					}
+					catch(Exception e){
+						System.out.println(e.getMessage());
+					}
+							
+				}
+				
+				filemanager.close();
+				
+				setTestRunning(false);
+			}
+		}).start();
 	}
 	
 	public void testSQLiDrupal(String url, final int numLog){
