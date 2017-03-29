@@ -32,9 +32,9 @@ public class Controller {
     	String web = url.getText();
     	String selectedFramework = framework.getValue();
     	
-    	if(web.indexOf("http://") < 0 && web.indexOf("https://") < 0){
-    		web = "http://" + web;
-    	}
+//    	if(web.indexOf("http://") < 0 && web.indexOf("https://") < 0){
+//    		web = "http://" + web;
+//    	}
     	
     	QueueTesting qt = new QueueTesting(web);
     	if(sqli.isSelected()) qt.addQueue(selectedFramework + "-sqli");

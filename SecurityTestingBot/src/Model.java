@@ -174,14 +174,31 @@ public class Model {
 //		}	
 //	}
 	
-	private String getOnlyHostName(String url){
-		int index;
-		int count = 1;
-		for(index = url.indexOf("/"); index >= 0 && count < 3; count++){
-			index = url.indexOf("/", index+1);
+	private ArrayList<String> extractUrl(String url){
+		String temp = "";
+		int indexStartQuery = url.indexOf("?") >= 0 ? url.indexOf("?") : url.length();
+		ArrayList<String> allPossibleUrlPath = new ArrayList<String>();
+				
+		if(url.indexOf("https://") == 0){
+			temp = "https://";
+			url = url.substring(temp.length(), indexStartQuery);
+		}else if(url.indexOf("http://") == 0){
+			temp = "http://";
+			url = url.substring(temp.length(), indexStartQuery);
+		}else{
+			temp = "http://";
+			url = url.substring(0, indexStartQuery);
 		}
 		
-		return index >= 0 ? url.substring(0, index) : url;
+		for(String path : url.split("/")){			
+			temp += path;
+			allPossibleUrlPath.add(temp);
+			temp += "/";
+		}
+		
+		if(allPossibleUrlPath.size() <= 0) allPossibleUrlPath.add(temp);
+		
+		return allPossibleUrlPath;
 	}
 	
 	private String getCurrentDateTime(){
@@ -190,16 +207,16 @@ public class Model {
 		return date;
 	}
 	
-	public void testSQLiJoomla(String fullUrl, final int numLog){		
+	public void testSQLiJoomla(final String fullUrl, final int numLog){		
 		this.setInitiate();
-		final String url = getOnlyHostName(fullUrl);
-		
 		this.setTestRunning(true);
 		
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
 
+				ArrayList<String> allPossibleUrlPath = extractUrl(fullUrl);
+				
 				FileManager filemanager = new FileManager();
 				filemanager.setReader("Joomla//SQLInjection");
 				filemanager.setWriter("Joomla-log" + (numLog + 1) + ".txt");
@@ -210,24 +227,36 @@ public class Model {
 				HttpURLConnection http;
 				
 				filemanager.writeLine("================================================================");
-				filemanager.writeLine(url + " SQL Injection " + getCurrentDateTime());
+				filemanager.writeLine(allPossibleUrlPath.get(0) + " SQL Injection " + getCurrentDateTime());
 				filemanager.writeLine("================================================================");
 				
 				while((temp = filemanager.readLineAllFile()) != null){
-					System.out.println(url + temp);
+					System.out.println(temp);
 					
 					try {
-						web = new URL(url + temp);
-						http = (HttpURLConnection)web.openConnection();
-						int statusCode = http.getResponseCode();
-						String statusMessage = http.getResponseMessage();
 						
-						driver.get(url + temp);
-						String title = driver.getTitle();
+						boolean check = false;
 						
 						filemanager.writeLine(temp);
-						filemanager.writeLine("Header : " + statusCode + " " + statusMessage);
-						filemanager.writeLine("Title : " + title);
+						
+						for(String url : allPossibleUrlPath){
+							web = new URL(url + temp);
+							http = (HttpURLConnection)web.openConnection();
+							int statusCode = http.getResponseCode();
+							String statusMessage = http.getResponseMessage();
+							
+							driver.get(url + temp);
+							String title = driver.getTitle();
+							
+							if(statusMessage.indexOf("1064") >= 0 || statusMessage.indexOf("SQL") >= 0
+									|| title.indexOf("1064") >= 0 ){
+								check = true;
+								filemanager.writeLine("Yes " + statusCode);
+								break;	
+							}
+						}
+						
+						if(!check) filemanager.writeLine("No");
 						
 					} catch (MalformedURLException e) {
 						e.printStackTrace();
