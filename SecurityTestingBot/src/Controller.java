@@ -19,9 +19,16 @@ public class Controller {
 	
 	@FXML
 	private void checkBeforeTesting(){
+		if(framework.getValue() != null && framework.getValue().equals("Drupal")){
+			sqli.setSelected(false);
+			sqli.setDisable(true);
+		}else{
+			sqli.setDisable(false);
+		}
+		
 		if(url.getText().length() > 0 && framework.getValue() != null && 
 				(sqli.isSelected() || xss.isSelected())){
-			btn.setDisable(false);
+			btn.setDisable(false);		
 		}else{
 			btn.setDisable(true);
 		}
