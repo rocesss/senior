@@ -1,0 +1,11 @@
+================================================================
+http://idtipster.com 16-2-2017 05:44:32
+================================================================
+/index.php?option=com_soccerbet&view=userbethistory&userid='123	500 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '123'' at line 1 SQL=SELECT * from #__sb_bets  where id=''123'
+/index.php?option=com_vikbooking&view=availability&room_ids[0]='123	404 Component not found.
+/index.php?option=com_onisquotes&view=quotes&tag='123&Itemid=180	404 Component not found.
+/index.php?option=com_soccerbet&view=matches&cat='123	500 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '123' and  cat_uid IN (SELECT cat_uid FROM  #__sb_games WHERE published =  '1') o' at line 1 SQL=select *  FROM #__sb_categories where  #__sb_categories.published=1  and #__sb_categories.cat_uid=''123' and  cat_uid IN (SELECT cat_uid FROM  #__sb_games WHERE published =  '1') order by cat_order asc LIMIT 0, 20
+/index.php?option=com_onismusic&view=songs&tag='123	404 Component not found.
+/index.php?option=com_onispetitions&view=petitions&tag='123	404 Component not found.
+/index.php?option=com_sponsorwall&task=click&wallid='123	404 Component not found.
+/index.php?option=com_jtagcalendar&format=raw&noframe=1&search=[SQL]&searchOnly=1	404 Component not found.

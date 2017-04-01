@@ -1,0 +1,21 @@
+#header{
+	-fx-background-color: #e3644b;
+	-fx-padding: 10 20 5 20;
+	-fx-spacing: 10;
+}
+
+#appName{
+	-fx-alignment: baseline-right;
+	-fx-spacing: 5;
+}
+
+#name{
+	-fx-text-fill: #ffffff;
+	-fx-font-weight: bold;
+	-fx-font-size: 20;
+}
+
+#version{
+	-fx-text-fill: #ffffff;
+	-fx-font-size: 10;
+}
