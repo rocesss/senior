@@ -21,10 +21,11 @@ public class QueueTesting implements Runnable{
 		this.addQueue("stop");
 		
 		int numlogfile = FileManager.numberOfLogFile();
+		model.setCancelled(false);
 		String cms = "";
-		
-		while(!q.isEmpty()){
-			if(!model.getTestRunning()){
+
+		while(!q.isEmpty() && !model.isCancelled()){
+			if(!model.isTestRunning()){
 				switch(q.poll()){
 				case "Joomla-sqli":
 					cms = "Joomla";
@@ -55,9 +56,14 @@ public class QueueTesting implements Runnable{
 			}
 		}
 		
-		model.sendResultToWeb(fullUrl, cms + "-log" + (numlogfile + 1) + ".txt");
-		model.closeDriver();
-		
+		if(!model.isCancelled()){
+			model.sendResultToWeb(fullUrl, cms + "-log" + (numlogfile + 1) + ".txt");
+		}
+		model.closeDriver();		
+	}
+	
+	public void cancel(){
+		model.setCancelled(true);
 	}
 	
 	public void addQueue(String item){
@@ -66,6 +72,7 @@ public class QueueTesting implements Runnable{
 	
 	public void start(){
 		t = new Thread(this);
+		t.setName("SScanner Queue Thread");
 		t.start();
 	}
 

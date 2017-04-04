@@ -2,7 +2,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.shape.Rectangle;
 
 public class Controller {
 	
@@ -15,7 +17,15 @@ public class Controller {
 	@FXML
 	private CheckBox xss;
 	@FXML
-	private Button btn;
+	private Rectangle progress;
+	@FXML
+	private Label percent;
+	@FXML
+	private Button cancelBtn;
+	@FXML
+	private Button runBtn;
+	
+	private QueueTesting qt;
 	
 	@FXML
 	private void checkBeforeTesting(){
@@ -28,18 +38,40 @@ public class Controller {
 		
 		if(url.getText().length() > 0 && framework.getValue() != null && 
 				(sqli.isSelected() || xss.isSelected())){
-			btn.setDisable(false);		
+			runBtn.setDisable(false);		
 		}else{
-			btn.setDisable(true);
+			runBtn.setDisable(true);
 		}
+	}
+	
+	@FXML
+	private void cancelTest(){
+		progress.setWidth(0);
+		percent.setText("0%");
+		
+		cancelBtn.setDisable(true);
+		url.setDisable(false);
+    	framework.setDisable(false);
+    	sqli.setDisable(false);
+    	xss.setDisable(false);
+    	runBtn.setDisable(false);
+		
+    	qt.cancel();
 	}
     
     @FXML
     private void penetrationTest(){
+    	cancelBtn.setDisable(false);
+    	url.setDisable(true);
+    	framework.setDisable(true);
+    	sqli.setDisable(true);
+    	xss.setDisable(true);
+    	runBtn.setDisable(true);
+    	
     	String web = url.getText();
     	String selectedFramework = framework.getValue();
     	
-    	QueueTesting qt = new QueueTesting(web);
+    	qt = new QueueTesting(web);
     	if(sqli.isSelected()) qt.addQueue(selectedFramework + "-sqli");
 		if(xss.isSelected()) qt.addQueue(selectedFramework + "-xss");
 		

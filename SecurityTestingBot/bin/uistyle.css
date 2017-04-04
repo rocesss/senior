@@ -1,3 +1,8 @@
+#container{
+	-fx-spacing: 10;
+	-fx-background-color: #ffffff;
+}
+
 #header{
 	-fx-background-color: #e3644b;
 	-fx-padding: 10 20 5 20;
@@ -18,4 +23,50 @@
 #version{
 	-fx-text-fill: #ffffff;
 	-fx-font-size: 10;
+}
+
+#content{
+	-fx-padding: 10 0 10 0;
+	-fx-spacing: 10;
+}
+
+.left{
+	-fx-alignment: top-left;
+}
+
+.right{
+	-fx-alignment: top-right;
+}
+
+.center{
+	-fx-alignment: center;
+}
+
+.spacing-5{
+	-fx-spacing: 5;
+}
+
+.spacing-50{
+	-fx-spacing: 50;
+}
+
+.text-size{
+	-fx-font-size: 13;
+}
+
+.input-style{
+	-fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
+	-fx-border-color: lightgrey;
+	-fx-background-color: white;
+}
+
+.checkbox-style{
+	-fx-base: #ffffff;
+	-fx-border-color: transparent;
+	-fx-focus-color: lightgrey;
+}
+
+.button:hover{
+	-fx-background-color: lightgrey;
 }

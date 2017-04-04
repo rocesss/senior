@@ -20,6 +20,7 @@ public class Model {
 	private WebDriver driver;
 	
 	private volatile boolean testRunning = false;
+	private volatile boolean cancelled = false;
 	
 	private void setInitiate(){
 		if(driver == null){
@@ -34,12 +35,20 @@ public class Model {
 		}	
 	}
 	
-	public boolean getTestRunning(){
+	public boolean isTestRunning(){
 		return testRunning;
 	}
 	
 	public void setTestRunning(boolean run){
 		testRunning = run;
+	}
+	
+	public boolean isCancelled(){
+		return cancelled;
+	}
+	
+	public void setCancelled(boolean cancel){
+		cancelled = cancel;
 	}
 	
 	public void sendResultToWeb(String webname, String filename){
@@ -90,73 +99,69 @@ public class Model {
 		return date;
 	}
 	
-	public void testSQLiJoomla(final String fullUrl, final int numLog){		
+	public void testSQLiJoomla(String fullUrl, int numLog){		
 		this.setInitiate();
 		this.setTestRunning(true);
-		
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
 
-				ArrayList<String> allPossibleUrlPath = extractUrl(fullUrl);
+		ArrayList<String> allPossibleUrlPath = extractUrl(fullUrl);
+		
+		FileManager filemanager = new FileManager();
+		filemanager.setReader("Joomla//SQLInjection");
+		filemanager.setWriter("Joomla-log" + (numLog + 1) + ".txt");
+		
+		String temp;
+		
+		URL web;
+		HttpURLConnection http;
+		
+		filemanager.writeLine("================================================================");
+		filemanager.writeLine(allPossibleUrlPath.get(0) + " SQL Injection " + getCurrentDateTime());
+		filemanager.writeLine("================================================================");
+		
+		while((temp = filemanager.readLineAllFile()) != null && !isCancelled()){
+			System.out.println(temp);
+			
+			try {
 				
-				FileManager filemanager = new FileManager();
-				filemanager.setReader("Joomla//SQLInjection");
-				filemanager.setWriter("Joomla-log" + (numLog + 1) + ".txt");
+				boolean check = false;
 				
-				String temp;
-				
-				URL web;
-				HttpURLConnection http;
-				
-				filemanager.writeLine("================================================================");
-				filemanager.writeLine(allPossibleUrlPath.get(0) + " SQL Injection " + getCurrentDateTime());
-				filemanager.writeLine("================================================================");
-				
-				while((temp = filemanager.readLineAllFile()) != null){
-					System.out.println(temp);
+				for(String url : allPossibleUrlPath){
+					web = new URL(url + temp);
+					http = (HttpURLConnection)web.openConnection();
+					int statusCode = http.getResponseCode();
+					String statusMessage = http.getResponseMessage();
+					driver.get(url + temp);
+					String title = driver.getTitle();
 					
-					try {
-						
-						boolean check = false;
-						
-						for(String url : allPossibleUrlPath){
-							web = new URL(url + temp);
-							http = (HttpURLConnection)web.openConnection();
-							int statusCode = http.getResponseCode();
-							String statusMessage = http.getResponseMessage();
-							driver.get(url + temp);
-							String title = driver.getTitle();
-							
-							if(statusMessage.indexOf("1064") >= 0 || statusMessage.indexOf("SQL") >= 0
-									|| title.indexOf("1064") >= 0 ){
-								check = true;
-								filemanager.writeLine(url + temp);
-								filemanager.writeLine("Yes " + statusCode);
-								break;	
-							}
-						}
-						
-						if(!check){
-							filemanager.writeLine(temp);
-							filemanager.writeLine("No");
-						} 
-						
-					} catch (MalformedURLException e) {
-						e.printStackTrace();
-					} catch (IOException e) {
-						e.printStackTrace();
-					} catch (Exception e){
-						e.printStackTrace();
+					if(isCancelled()) break; 
+					
+					if(statusMessage.indexOf("1064") >= 0 || statusMessage.indexOf("SQL") >= 0
+							|| title.indexOf("1064") >= 0 ){
+						check = true;
+						filemanager.writeLine(url + temp);
+						filemanager.writeLine("Yes " + statusCode);
+						break;	
 					}
-					
 				}
 				
-				filemanager.close();
-
-				setTestRunning(false);
+				if(!check && !isCancelled()){
+					filemanager.writeLine(temp);
+					filemanager.writeLine("No");
+				} 
+				
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (Exception e){
+				e.printStackTrace();
 			}
-		}).start();
+			
+		}
+		
+		filemanager.close();
+
+		this.setTestRunning(false);
 	}
 	
 	private int isAlertPresent(){
@@ -199,76 +204,72 @@ public class Model {
 		return alert;
 	}
 	
-	public void testXSSJoomla(final String fullUrl, final int numLog){
+	public void testXSSJoomla(String fullUrl, int numLog){
 		this.setInitiate();
 		this.setTestRunning(true);
 		
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
+		ArrayList<String> allPossibleUrlPath = extractUrl(fullUrl);
+		
+		FileManager filemanager = new FileManager();
+		filemanager.setReader("Joomla//XSS");
+		filemanager.setWriter("Joomla-log" + (numLog + 1) + ".txt");
+		
+		String temp;
+		
+		filemanager.writeLine("================================================================");
+		filemanager.writeLine(allPossibleUrlPath.get(0) + " Cross-site Script " + getCurrentDateTime());
+		filemanager.writeLine("================================================================");
+		
+		while((temp = filemanager.readLineAllFile()) != null && !isCancelled()){
+			System.out.println(temp);
+			
+			try{
+				int check = -1;
+				String tempUrl = allPossibleUrlPath.get(0);
 				
-				ArrayList<String> allPossibleUrlPath = extractUrl(fullUrl);
-				
-				FileManager filemanager = new FileManager();
-				filemanager.setReader("Joomla//XSS");
-				filemanager.setWriter("Joomla-log" + (numLog + 1) + ".txt");
-				
-				String temp;
-				
-				filemanager.writeLine("================================================================");
-				filemanager.writeLine(allPossibleUrlPath.get(0) + " Cross-site Script " + getCurrentDateTime());
-				filemanager.writeLine("================================================================");
-				
-				while((temp = filemanager.readLineAllFile()) != null){
-					System.out.println(temp);
+				for(String url : allPossibleUrlPath){
+					driver.get(url + temp);
 					
-					try{
-						int check = -1;
-						String tempUrl = allPossibleUrlPath.get(0);
-						
-						for(String url : allPossibleUrlPath){
-							driver.get(url + temp);
-							
-							int alert = isAlertPresent();
-							
-							if(alert > check){
-								check = alert;
-								tempUrl = url + temp;
-							}	
-						}
-						
-						
-						switch(check){
-						case 0:
-							filemanager.writeLine(temp);
-							filemanager.writeLine("No-Risk");
-							break;
-						case 1:
-							filemanager.writeLine(tempUrl);
-							filemanager.writeLine("Risk No");
-							break;
-						case 2:
-							filemanager.writeLine(tempUrl);
-							filemanager.writeLine("Risk Yes");
-							break;
-						default: 
-							filemanager.writeLine(temp);
-							filemanager.writeLine("No-Risk");
-							break;
-						}
-						
-					}
-					catch(Exception e){
-						System.out.println(e.getMessage());
-					}
-							
+					int alert = isAlertPresent();
+					
+					if(isCancelled()) break;
+					
+					if(alert > check){
+						check = alert;
+						tempUrl = url + temp;
+					}	
 				}
 				
-				filemanager.close();
-				
-				setTestRunning(false);
+				if(!isCancelled()){
+					switch(check){
+					case 0:
+						filemanager.writeLine(temp);
+						filemanager.writeLine("No-Risk");
+						break;
+					case 1:
+						filemanager.writeLine(tempUrl);
+						filemanager.writeLine("Risk No");
+						break;
+					case 2:
+						filemanager.writeLine(tempUrl);
+						filemanager.writeLine("Risk Yes");
+						break;
+					default: 
+						filemanager.writeLine(temp);
+						filemanager.writeLine("No-Risk");
+						break;
+					}
+				}
 			}
-		}).start();
+			catch(Exception e){
+				System.out.println(e.getMessage());
+			}
+					
+		}
+		
+		filemanager.close();
+		
+		this.setTestRunning(false);
 	}
 	
 	private int resultTesting(String url, String check, String typeQuery){
@@ -315,231 +316,225 @@ public class Model {
 		return result;
 	}
 		
-	public void testSQLiWordpress(final String fullUrl, final int numLog){
+	public void testSQLiWordpress(String fullUrl, int numLog){
 		this.setInitiate();
 		this.setTestRunning(true);
 		
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
+		ArrayList<String> allPossibleUrlPath = extractUrl(fullUrl);
+		
+		FileManager filemanager = new FileManager();
+		filemanager.setReader("Wordpress//SQLInjection");
+		filemanager.setWriter("Wordpress-log" + (numLog + 1) + ".txt");
+		
+		String temp;
+		String query = "-5+/*!12345UNION*/+/*!12345SELECT*/+";
+		String queryWithQuot = "-5'+/*!12345UNION*/+/*!12345SELECT*/+";
+		String endQuery = "+--";
+		
+		int numOfColumn = 50; // defined number of columns of table in database
+		String checkWPSQLi = "999999999999999999999999999999";
+		
+		filemanager.writeLine("================================================================");
+		filemanager.writeLine(allPossibleUrlPath.get(0) + " SQL Injection " + getCurrentDateTime());
+		filemanager.writeLine("================================================================");
+		
+		while((temp = filemanager.readLineAllFile()) != null && !isCancelled()){
+			System.out.println(temp);
+			
+			try {
 				
-				ArrayList<String> allPossibleUrlPath = extractUrl(fullUrl);
+				String tempColumn = "";
+				String tempUrl = "";
+				int result = 0;
 				
-				FileManager filemanager = new FileManager();
-				filemanager.setReader("Wordpress//SQLInjection");
-				filemanager.setWriter("Wordpress-log" + (numLog + 1) + ".txt");
-				
-				String temp;
-				String query = "-5+/*!12345UNION*/+/*!12345SELECT*/+";
-				String queryWithQuot = "-5'+/*!12345UNION*/+/*!12345SELECT*/+";
-				String endQuery = "+--";
-				
-				int numOfColumn = 50; // defined number of columns of table in database
-				String checkWPSQLi = "999999999999999999999999999999";
-				
-				filemanager.writeLine("================================================================");
-				filemanager.writeLine(allPossibleUrlPath.get(0) + " SQL Injection " + getCurrentDateTime());
-				filemanager.writeLine("================================================================");
-				
-				while((temp = filemanager.readLineAllFile()) != null){
-					System.out.println(temp);
-					
-					try {
+				for(String url : allPossibleUrlPath){
+					tempColumn = "";
+					for(int i = 1; i <= numOfColumn; i++){
 						
-						String tempColumn = "";
-						String tempUrl = "";
-						int result = 0;
+						tempColumn += checkWPSQLi;
 						
-						for(String url : allPossibleUrlPath){
-							tempColumn = "";
-							for(int i = 1; i <= numOfColumn; i++){
-								
-								tempColumn += checkWPSQLi;
-								
-								tempUrl = url + temp + query + tempColumn + endQuery;
-								result = resultTesting(tempUrl, checkWPSQLi, "queryWithOutQuot");
-								if(result > 0) break;
-								
-								tempUrl = url + temp + queryWithQuot + tempColumn + endQuery;
-								result = resultTesting(tempUrl, checkWPSQLi, "queryWithQuot");
-								if(result > 0) break;
-								
-								tempColumn += ",";
-								
-							}
-							if(result > 0) break;
-						}
+						if(isCancelled()) break; 
+						tempUrl = url + temp + query + tempColumn + endQuery;
+						result = resultTesting(tempUrl, checkWPSQLi, "queryWithOutQuot");
+						if(result > 0) break;
 						
-						if(result == 0){
-							filemanager.writeLine(temp);
-							filemanager.writeLine("No");						
-						} else if(result == 1){
-							filemanager.writeLine(tempUrl);
-							filemanager.writeLine("Yes");						
-						} else {
-							filemanager.writeLine(tempUrl);
-							filemanager.writeLine("Yes");
-						}
+						if(isCancelled()) break; 
+						tempUrl = url + temp + queryWithQuot + tempColumn + endQuery;
+						result = resultTesting(tempUrl, checkWPSQLi, "queryWithQuot");
+						if(result > 0) break;
 						
-					} catch (Exception e){
-						e.printStackTrace();
+						tempColumn += ",";
+						
 					}
-					
+					if(result > 0 || isCancelled()) break;
 				}
 				
-				filemanager.close();
+				if(!isCancelled()){
+					if(result == 0){
+						filemanager.writeLine(temp);
+						filemanager.writeLine("No");						
+					} else if(result == 1){
+						filemanager.writeLine(tempUrl);
+						filemanager.writeLine("Yes");						
+					} else {
+						filemanager.writeLine(tempUrl);
+						filemanager.writeLine("Yes");
+					}
+				}
 				
-				setTestRunning(false);
+			} catch (Exception e){
+				e.printStackTrace();
 			}
-		}).start();
+			
+		}
+		
+		filemanager.close();
+		
+		this.setTestRunning(false);
 	}
 	
-	public void testXSSWordpress(final String fullUrl, final int numLog){
+	public void testXSSWordpress(String fullUrl, int numLog){
 		this.setInitiate();
 		this.setTestRunning(true);
 		
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-
-				ArrayList<String> allPossibleUrlPath = extractUrl(fullUrl);
+		ArrayList<String> allPossibleUrlPath = extractUrl(fullUrl);
+		
+		FileManager filemanager = new FileManager();
+		filemanager.setReader("Wordpress//XSS");
+		filemanager.setWriter("Wordpress-log" + (numLog + 1) + ".txt");
+		
+		String temp;
+		
+		filemanager.writeLine("================================================================");
+		filemanager.writeLine(allPossibleUrlPath.get(0) + " Cross-site Script " + getCurrentDateTime());
+		filemanager.writeLine("================================================================");
+		
+		while((temp = filemanager.readLineAllFile()) != null && !isCancelled()){
+			System.out.println(temp);
+			
+			try{
 				
-				FileManager filemanager = new FileManager();
-				filemanager.setReader("Wordpress//XSS");
-				filemanager.setWriter("Wordpress-log" + (numLog + 1) + ".txt");
+				int check = -1;
+				String tempUrl = allPossibleUrlPath.get(0);
 				
-				String temp;
-				
-				filemanager.writeLine("================================================================");
-				filemanager.writeLine(allPossibleUrlPath.get(0) + " Cross-site Script " + getCurrentDateTime());
-				filemanager.writeLine("================================================================");
-				
-				while((temp = filemanager.readLineAllFile()) != null){
-					System.out.println(temp);
+				for(String url : allPossibleUrlPath){
+					driver.get(url + temp);
 					
-					try{
+					int alert = isAlertPresent();
+					
+					if(isCancelled()) break;
+					
+					if(alert > check){
+						check = alert;
+						tempUrl = url + temp;
+					}	
+				}
 						
-						int check = -1;
-						String tempUrl = allPossibleUrlPath.get(0);
-						
-						for(String url : allPossibleUrlPath){
-							driver.get(url + temp);
-							
-							int alert = isAlertPresent();
-							
-							if(alert > check){
-								check = alert;
-								tempUrl = url + temp;
-							}	
-						}
-								
-						switch(check){
-						case 0:
-							filemanager.writeLine(temp);
-							filemanager.writeLine("No-Risk");
-							break;
-						case 1:
-							filemanager.writeLine(tempUrl);
-							filemanager.writeLine("Risk No");
-							break;
-						case 2:
-							filemanager.writeLine(tempUrl);
-							filemanager.writeLine("Risk Yes");
-							break;
-						default: 
-							filemanager.writeLine(temp);
-							filemanager.writeLine("No-Risk");
-							break;
-						}
-						
+				if(!isCancelled()){
+					switch(check){
+					case 0:
+						filemanager.writeLine(temp);
+						filemanager.writeLine("No-Risk");
+						break;
+					case 1:
+						filemanager.writeLine(tempUrl);
+						filemanager.writeLine("Risk No");
+						break;
+					case 2:
+						filemanager.writeLine(tempUrl);
+						filemanager.writeLine("Risk Yes");
+						break;
+					default: 
+						filemanager.writeLine(temp);
+						filemanager.writeLine("No-Risk");
+						break;
 					}
-					catch(Exception e){
-						System.out.println(e.getMessage());
-					}
-							
 				}
 				
-				filemanager.close();
-				
-				setTestRunning(false);
 			}
-		}).start();
+			catch(Exception e){
+				System.out.println(e.getMessage());
+			}
+					
+		}
+		
+		filemanager.close();
+		
+		this.setTestRunning(false);
 	}
 	
-	public void testSQLiDrupal(String url, final int numLog){
+	public void testSQLiDrupal(String fullUrl, int numLog){
 		System.out.println("This is testSQLiDrupal method but have no content.");
 	}
 	
-	public void testXSSDrupal(final String fullUrl, final int numLog){
+	public void testXSSDrupal(String fullUrl, int numLog){
 		this.setInitiate();
 		this.setTestRunning(true);
 		
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-
-				ArrayList<String> allPossibleUrlPath = extractUrl(fullUrl);
+		ArrayList<String> allPossibleUrlPath = extractUrl(fullUrl);
+		
+		FileManager filemanager = new FileManager();
+		filemanager.setReader("Drupal//XSS");
+		filemanager.setWriter("Drupal-log" + (numLog + 1) + ".txt");
+		
+		String temp;
+		
+		filemanager.writeLine("================================================================");
+		filemanager.writeLine(allPossibleUrlPath.get(0) + " Cross-site Script " + getCurrentDateTime());
+		filemanager.writeLine("================================================================");
+		
+		while((temp = filemanager.readLineAllFile()) != null && !isCancelled()){
+			System.out.println(temp);
+			
+			try{
 				
-				FileManager filemanager = new FileManager();
-				filemanager.setReader("Drupal//XSS");
-				filemanager.setWriter("Drupal-log" + (numLog + 1) + ".txt");
+				int check = -1;
+				String tempUrl = allPossibleUrlPath.get(0);
 				
-				String temp;
-				
-				filemanager.writeLine("================================================================");
-				filemanager.writeLine(allPossibleUrlPath.get(0) + " Cross-site Script " + getCurrentDateTime());
-				filemanager.writeLine("================================================================");
-				
-				while((temp = filemanager.readLineAllFile()) != null){
-					System.out.println(temp);
+				for(String url : allPossibleUrlPath){
+					driver.get(url + temp);
 					
-					try{
+					int alert = isAlertPresent();
+					
+					if(isCancelled()) break;
+					
+					if(alert > check){
+						check = alert;
+						tempUrl = url + temp;
+					}	
+				}
 						
-						int check = -1;
-						String tempUrl = allPossibleUrlPath.get(0);
-						
-						for(String url : allPossibleUrlPath){
-							driver.get(url + temp);
-							
-							int alert = isAlertPresent();
-							
-							if(alert > check){
-								check = alert;
-								tempUrl = url + temp;
-							}	
-						}
-								
-						switch(check){
-						case 0:
-							filemanager.writeLine(temp);
-							filemanager.writeLine("No-Risk");
-							break;
-						case 1:
-							filemanager.writeLine(tempUrl);
-							filemanager.writeLine("Risk No");
-							break;
-						case 2:
-							filemanager.writeLine(tempUrl);
-							filemanager.writeLine("Risk Yes");
-							break;
-						default: 
-							filemanager.writeLine(temp);
-							filemanager.writeLine("No-Risk");
-							break;
-						}
-						
+				if(!isCancelled()){
+					switch(check){
+					case 0:
+						filemanager.writeLine(temp);
+						filemanager.writeLine("No-Risk");
+						break;
+					case 1:
+						filemanager.writeLine(tempUrl);
+						filemanager.writeLine("Risk No");
+						break;
+					case 2:
+						filemanager.writeLine(tempUrl);
+						filemanager.writeLine("Risk Yes");
+						break;
+					default: 
+						filemanager.writeLine(temp);
+						filemanager.writeLine("No-Risk");
+						break;
 					}
-					catch(Exception e){
-						System.out.println(e.getMessage());
-					}
-							
 				}
 				
-				filemanager.close();
-				
-				setTestRunning(false);
 			}
-		}).start();
+			catch(Exception e){
+				System.out.println(e.getMessage());
+			}
+					
+		}
+		
+		filemanager.close();
+		
+		this.setTestRunning(false);
 	}
 
 }
