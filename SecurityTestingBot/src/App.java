@@ -1,51 +1,26 @@
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 public class App extends Application {
 	
-	EventHandler<WindowEvent> eventHandler = new EventHandler<WindowEvent>() {
-		
-		@Override
-		public void handle(WindowEvent event) {
-			ThreadGroup currentGroup = Thread.currentThread().getThreadGroup();
-		    int noThreads = currentGroup.activeCount();
-		    Thread[] listThreads = new Thread[noThreads];
-		    currentGroup.enumerate(listThreads);
-		    
-		    boolean isRunning = false; // อาจจะต้องเอาไปวางไว้ข้างนอก
-		    
-		    for (int i = 0; i < noThreads; i++){
-		    	if(listThreads[i].getName().equalsIgnoreCase("SScanner Queue Thread") ||
-		    			listThreads[i].getName().indexOf("session") >= 0){
-		    		isRunning = true;
-		    	}
-		    }
-			
-		    if(isRunning){
-		    	
-		    }else{
-		    	Platform.exit();
-		    	System.exit(0);
-		    }
-		    
-		}
-	};
-	
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("ui.fxml"));
         
+    	FXMLLoader loader = new FXMLLoader(getClass().getResource("ui.fxml"));
+    	Parent root = (Parent)loader.load();
+    	Controller controller = (Controller) loader.getController();
+        
+    	primaryStage.getIcons().add(new Image("/images/sscan-icon.png"));
         primaryStage.setResizable(false);
         primaryStage.setScene(new Scene(root));
         primaryStage.setTitle("SScanner");
         primaryStage.show();
-        primaryStage.setOnCloseRequest(eventHandler);
+
+        controller.setStage(primaryStage);
     }
     
     private static void setSystemProperty(){
