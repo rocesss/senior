@@ -45,16 +45,13 @@
 	    </HBox>
 	    
 	    <HBox styleClass="center, spacing-50">
-		    <CheckBox fx:id="sqli" styleClass="input-style, text-size, checkbox-style" text="SQL Injection" onAction="#checkBeforeTesting" />
-		    <CheckBox fx:id="xss" styleClass="input-style, text-size, checkbox-style" text="Cross-site Script" onAction="#checkBeforeTesting" />
+		    <CheckBox fx:id="sqli" styleClass="text-size" text="SQL Injection" onAction="#checkBeforeTesting" />
+		    <CheckBox fx:id="xss" styleClass="text-size" text="Cross-site Script" onAction="#checkBeforeTesting" />
 	    </HBox>
 	    
 	    <HBox styleClass="center, spacing-5">
 	    	<StackPane>
-		    	<AnchorPane>
-			    	<Rectangle fill="lightgrey" width="360" height="25" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
-					<Rectangle fx:id="progress" fill="#3aaf1f" width="0" height="25" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
-		    	</AnchorPane>
+		    	<ProgressBar fx:id="progressBar" prefHeight="50" prefWidth="360" progress="0.0" />
 		    	<Label fx:id="percent" text="0%"/>
 	    	</StackPane>
     	</HBox>

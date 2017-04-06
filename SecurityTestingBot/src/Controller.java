@@ -2,6 +2,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -14,11 +15,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -35,7 +37,7 @@ public class Controller implements Initializable{
 	@FXML
 	private CheckBox xss;
 	@FXML
-	private Rectangle progress;
+	private ProgressBar progressBar;
 	@FXML
 	private Label percent;
 	@FXML
@@ -48,11 +50,12 @@ public class Controller implements Initializable{
 	private Button noBtnDialog;
 	
 	private QueueTesting qt;
+	private ProgressTask task;
 	
 	private Stage appStage;
 	private Stage dialogStage;
 	
-	private EventHandler<WindowEvent> eventHandler = new EventHandler<WindowEvent>() {
+	private EventHandler<WindowEvent> exitHandler = new EventHandler<WindowEvent>() {
 		
 		@Override
 		public void handle(WindowEvent event){
@@ -78,9 +81,57 @@ public class Controller implements Initializable{
 		}
 	};
 	
+	private final String buttonStyle = "-fx-focus-color: transparent;"
+    									+ "-fx-faint-focus-color: transparent;"
+							    		+ "-fx-border-color: lightgrey;"
+							    		+ "-fx-background-color: white;";
+    
+    private final String buttonHoverStyle = "-fx-background-color: lightgrey;";
+	
+	private EventHandler<Event> buttonHandler = new EventHandler<Event>() {
+		
+		@Override
+		public void handle(Event event) {
+			if(event.getEventType() == MouseEvent.MOUSE_ENTERED){
+				((Button) event.getSource()).setStyle(buttonHoverStyle);
+			}else if(event.getEventType() == MouseEvent.MOUSE_EXITED){
+				((Button) event.getSource()).setStyle(buttonStyle);
+			}else if(event.getEventType() == MouseEvent.MOUSE_CLICKED){
+				String btnName = ((Button)event.getSource()).getText();
+				
+				if(btnName.equals("Yes")){
+					task.cancel();
+					qt.cancel();
+			    	Platform.exit();
+				}else if(btnName.equals("No")){
+					((Node)(event.getSource())).getScene().getWindow().hide();
+				}
+			}		
+		}
+	};
+	
+	private EventHandler<WorkerStateEvent> progressBarHandler = new EventHandler<WorkerStateEvent>() {
+		
+		@Override
+		public void handle(WorkerStateEvent event) {
+			if(event.getEventType() == WorkerStateEvent.WORKER_STATE_CANCELLED){
+				progressBar.lookup(".bar").setStyle("-fx-background-color: red;");
+			}else if(event.getEventType() == WorkerStateEvent.WORKER_STATE_RUNNING){
+				progressBar.lookup(".bar").setStyle("-fx-background-color: #3aaf1f;");
+			}else if(event.getEventType() == WorkerStateEvent.WORKER_STATE_SUCCEEDED){
+				cancelBtn.setDisable(true);
+				url.setDisable(false);
+		    	framework.setDisable(false);
+		    	sqli.setDisable(false);
+		    	xss.setDisable(false);
+		    	runBtn.setDisable(false);
+			}
+		}
+	};
+	
 	public void setStage(Stage stage){
 		this.appStage = stage;
-		this.appStage.setOnCloseRequest(eventHandler);
+		this.appStage.setOnCloseRequest(exitHandler);
 	}
 	
 	@Override
@@ -100,72 +151,26 @@ public class Controller implements Initializable{
 	    message2.setText("Are you sure you want to exit?");
 	    message2.setFont(new Font(Font.getDefault().getFamily(), 13));
 	    
-	    String buttonStyle = "-fx-focus-color: transparent;"
-	    		+ "-fx-faint-focus-color: transparent;"
-	    		+ "-fx-border-color: lightgrey;"
-	    		+ "-fx-background-color: white;";
-	    
-	    String buttonHoverStyle = "-fx-background-color: lightgrey;";
-	    
 	    Button yesBtnDialog = new Button();
 	    yesBtnDialog.setText("Yes");
 	    yesBtnDialog.setPrefWidth(50);
 	    yesBtnDialog.setStyle(buttonStyle);
-	    yesBtnDialog.setOnMouseClicked(new EventHandler<Event>() {
-
-			@Override
-			public void handle(Event event) {
-				qt.cancel();
-		    	
-		    	Platform.exit();	
-			}
-		});
-	    yesBtnDialog.setOnMouseEntered(new EventHandler<Event>() {
-
-			@Override
-			public void handle(Event event) {
-				yesBtnDialog.setStyle(buttonHoverStyle);
-			}
-		});
-	    yesBtnDialog.setOnMouseExited(new EventHandler<Event>() {
-
-			@Override
-			public void handle(Event event) {
-				yesBtnDialog.setStyle(buttonStyle);
-			}
-		});
+	    yesBtnDialog.setOnMouseClicked(buttonHandler);
+	    yesBtnDialog.setOnMouseEntered(buttonHandler);
+	    yesBtnDialog.setOnMouseExited(buttonHandler);
 	    
 	    Button noBtnDialog = new Button();
 	    noBtnDialog.setText("No");
 	    noBtnDialog.setPrefWidth(50);
 	    noBtnDialog.setStyle(buttonStyle);
-	    noBtnDialog.setOnMouseClicked(new EventHandler<Event>() {
-
-			@Override
-			public void handle(Event event) {
-				((Node)(event.getSource())).getScene().getWindow().hide();	
-			}
-		});
-	    noBtnDialog.setOnMouseEntered(new EventHandler<Event>() {
-
-			@Override
-			public void handle(Event event) {
-				noBtnDialog.setStyle(buttonHoverStyle);
-			}
-		});
-	    noBtnDialog.setOnMouseExited(new EventHandler<Event>() {
-
-			@Override
-			public void handle(Event event) {
-				noBtnDialog.setStyle(buttonStyle);
-			}
-		});
+	    noBtnDialog.setOnMouseClicked(buttonHandler);
+	    noBtnDialog.setOnMouseEntered(buttonHandler);
+	    noBtnDialog.setOnMouseExited(buttonHandler);
 	    
 	    HBox buttonContainer = new HBox(yesBtnDialog, noBtnDialog);
 	    buttonContainer.setSpacing(10);
 	    buttonContainer.setAlignment(Pos.TOP_RIGHT);
 	    buttonContainer.setPadding(new Insets(10));
-	    
 	    
 	    VBox vbox = new VBox(message1, message2, buttonContainer);
 	    vbox.setPrefSize(350, 100);
@@ -195,9 +200,6 @@ public class Controller implements Initializable{
 	
 	@FXML
 	private void cancelTest(){
-		progress.setWidth(0);
-		percent.setText("0%");
-		
 		cancelBtn.setDisable(true);
 		url.setDisable(false);
     	framework.setDisable(false);
@@ -205,6 +207,7 @@ public class Controller implements Initializable{
     	xss.setDisable(false);
     	runBtn.setDisable(false);
 		
+    	task.cancel();
     	qt.cancel();
 	}
     
@@ -220,11 +223,27 @@ public class Controller implements Initializable{
     	String web = url.getText();
     	String selectedFramework = framework.getValue();
     	
-    	qt = new QueueTesting(web);
-    	if(sqli.isSelected()) qt.addQueue(selectedFramework + "-sqli");
-		if(xss.isSelected()) qt.addQueue(selectedFramework + "-xss");
+    	task = new ProgressTask();
+    	qt = new QueueTesting(web, task);	
+    	
+    	if(sqli.isSelected()){
+    		qt.addQueue(selectedFramework + "-sqli");
+    		task.addTask(selectedFramework + "-sqli");
+    	} 
+		if(xss.isSelected()){
+			qt.addQueue(selectedFramework + "-xss");
+			task.addTask(selectedFramework + "-xss");
+		} 
 		
-		qt.start();
+		qt.start();	
+		
+		progressBar.progressProperty().bind(task.progressProperty());
+		percent.textProperty().bind(task.messageProperty());
+		task.setOnCancelled(progressBarHandler);
+		task.setOnRunning(progressBarHandler);
+		task.setOnSucceeded(progressBarHandler);
+		
+		new Thread(task).start();
     }	
     
 }

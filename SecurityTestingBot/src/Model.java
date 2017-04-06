@@ -21,6 +21,7 @@ public class Model {
 	
 	private volatile boolean testRunning = false;
 	private volatile boolean cancelled = false;
+	private volatile int completedTaskNum = 0;
 	
 	private void setInitiate(){
 		if(driver == null){
@@ -49,6 +50,14 @@ public class Model {
 	
 	public void setCancelled(boolean cancel){
 		cancelled = cancel;
+	}
+	
+	public int getCompletedTaskNum(){
+		return completedTaskNum;
+	}
+	
+	private void incrementCompletedTaskNum(){
+		completedTaskNum++;
 	}
 	
 	public void sendResultToWeb(String webname, String filename){
@@ -157,6 +166,8 @@ public class Model {
 				e.printStackTrace();
 			}
 			
+			this.incrementCompletedTaskNum();
+			
 		}
 		
 		filemanager.close();
@@ -264,6 +275,8 @@ public class Model {
 			catch(Exception e){
 				System.out.println(e.getMessage());
 			}
+			
+			this.incrementCompletedTaskNum();
 					
 		}
 		
@@ -386,6 +399,8 @@ public class Model {
 				e.printStackTrace();
 			}
 			
+			this.incrementCompletedTaskNum();
+			
 		}
 		
 		filemanager.close();
@@ -455,6 +470,8 @@ public class Model {
 			catch(Exception e){
 				System.out.println(e.getMessage());
 			}
+			
+			this.incrementCompletedTaskNum();
 					
 		}
 		
@@ -529,6 +546,8 @@ public class Model {
 			catch(Exception e){
 				System.out.println(e.getMessage());
 			}
+			
+			this.incrementCompletedTaskNum();
 					
 		}
 		

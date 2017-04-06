@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.LineNumberReader;
 import java.io.PrintWriter;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -129,6 +130,33 @@ public class FileManager {
 			writer.close();
 			writer = null;
 		} 
+	}
+	
+	public int lineNumber(ArrayList<String> path){
+		ArrayList<String> pathList = new ArrayList<String>();
+		
+		for(String t : path){
+			pathList.addAll(this.getFilePath(Paths.get("").toAbsolutePath().toString() 
+				+ "//src//PenetrationScript//" + t));
+		}
+		
+		int lineNum = 0;
+		LineNumberReader lnr;
+		
+		for(String file : pathList){
+			try {
+				lnr = new LineNumberReader(new FileReader(file));
+				lnr.skip(Long.MAX_VALUE);
+		    	lineNum += lnr.getLineNumber() + 1;
+		    	lnr.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return lineNum;
 	}
 
 }

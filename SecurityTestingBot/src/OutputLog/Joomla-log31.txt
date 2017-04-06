@@ -1,0 +1,7 @@
+================================================================
+http://www.ablearuba.com SQL Injection 07-4-2017 03:06:05
+================================================================
+/index.php/en/?option=com_vikrentitems&task=showprc&itemopt=%27123&days=2&pickup=1490790600&release=1490947200&place=%27123&Itemid=132
+No
+/index.php/en/?option=com_vikrentcar&caropt=%27123&days=31&pickup=1490947200&release=1493542800&place=%27123&task=showprc&Itemid=104
+No

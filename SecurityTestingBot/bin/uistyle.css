@@ -61,10 +61,23 @@
 	-fx-background-color: white;
 }
 
-.checkbox-style{
-	-fx-base: #ffffff;
-	-fx-border-color: transparent;
-	-fx-focus-color: lightgrey;
+.check-box > .box{
+	-fx-background-radius: 0;
+  	-fx-background-color: -fx-box-border, lightgrey, #ffffff;
+	-fx-background-insets: 0, 1, 1;
+}
+
+.progress-bar > .bar {
+    -fx-background-color: #3aaf1f;
+    -fx-background-insets: 1;
+    -fx-background-radius: 0;
+	-fx-padding: 10;
+}
+
+.progress-bar > .track{
+	-fx-background-radius: 0;
+  	-fx-background-color: -fx-box-border, lightgrey, #ffffff;
+	-fx-background-insets: 0, 1, 1;
 }
 
 .button:hover{

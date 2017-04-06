@@ -9,9 +9,10 @@ public class QueueTesting implements Runnable{
 	private Model model;
 	private String fullUrl;
 	
-	public QueueTesting(String web){
+	public QueueTesting(String web, ProgressTask task){
 		q = new LinkedList<String>();
 		model = new Model();
+		task.setModel(model);
 		fullUrl = web;
 	}
 	
