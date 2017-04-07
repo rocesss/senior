@@ -1,0 +1,4 @@
+/modules/cumulus/cumulus.swf?mode=tags&tagcloud=%3Ctags%3E%3Ca+href='javascript:alert(123)'+data-xss='xss'+style='font-size:+40pt'%3EClick%20me%3C/a%3E%3C/tags%3E
+/index.php?q=<script>alert(123)</script>
+/xxx"><script>alert(123)</script><"
+/node/view/666"><script>alert(123)</script>

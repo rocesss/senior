@@ -19,14 +19,16 @@ public class FileManager {
 	
 	public static int numberOfLogFile(){
 		File folder = new File(Paths.get("").toAbsolutePath().toString() 
-				+ "//src//OutputLog");
+				+ "//SScanner Log");
+		
+		if(!folder.isDirectory()) folder.mkdir();
 		
 		return folder.listFiles().length;
 	}
 	
 	public void setReader(String path){
 		allFilePath = this.getFilePath(Paths.get("").toAbsolutePath().toString() 
-				+ "//src//PenetrationScript//" + path);
+				+ "//Penetration Script//" + path);
 		fileContent = null;
 		indexFileFocus = 0;
 	}
@@ -34,7 +36,7 @@ public class FileManager {
 	public void setWriter(String path){
 		try {
 			writer = new PrintWriter(new FileWriter(Paths.get("").toAbsolutePath().toString() 
-					+ "//src//OutputLog//" + path, true));
+					+ "//SScanner Log//" + path, true));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -137,7 +139,7 @@ public class FileManager {
 		
 		for(String t : path){
 			pathList.addAll(this.getFilePath(Paths.get("").toAbsolutePath().toString() 
-				+ "//src//PenetrationScript//" + t));
+				+ "//Penetration Script//" + t));
 		}
 		
 		int lineNum = 0;

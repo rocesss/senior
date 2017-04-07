@@ -62,7 +62,7 @@ public class Model {
 	
 	public void sendResultToWeb(String webname, String filename){
 		String url = "https://seniorsecure.tk/projects/new";
-		String filepath = Paths.get("").toAbsolutePath().toString() + "//src//OutputLog//" + filename;
+		String filepath = Paths.get("").toAbsolutePath().toString() + "//SScanner Log//" + filename;
 		File file = new File(filepath);
 		if(!file.isFile()) return;
 		
@@ -128,7 +128,7 @@ public class Model {
 		filemanager.writeLine("================================================================");
 		
 		while((temp = filemanager.readLineAllFile()) != null && !isCancelled()){
-			System.out.println(temp);
+//			System.out.println(temp);
 			
 			try {
 				
@@ -232,7 +232,7 @@ public class Model {
 		filemanager.writeLine("================================================================");
 		
 		while((temp = filemanager.readLineAllFile()) != null && !isCancelled()){
-			System.out.println(temp);
+//			System.out.println(temp);
 			
 			try{
 				int check = -1;
@@ -352,7 +352,7 @@ public class Model {
 		filemanager.writeLine("================================================================");
 		
 		while((temp = filemanager.readLineAllFile()) != null && !isCancelled()){
-			System.out.println(temp);
+//			System.out.println(temp);
 			
 			try {
 				
@@ -425,7 +425,7 @@ public class Model {
 		filemanager.writeLine("================================================================");
 		
 		while((temp = filemanager.readLineAllFile()) != null && !isCancelled()){
-			System.out.println(temp);
+//			System.out.println(temp);
 			
 			try{
 				
@@ -501,7 +501,7 @@ public class Model {
 		filemanager.writeLine("================================================================");
 		
 		while((temp = filemanager.readLineAllFile()) != null && !isCancelled()){
-			System.out.println(temp);
+//			System.out.println(temp);
 			
 			try{
 				

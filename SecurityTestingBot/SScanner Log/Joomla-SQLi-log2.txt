@@ -1,0 +1,255 @@
+================================================================
+http://idtipster.com 20-2-2017 06:23:52
+================================================================
+/index.php?option=com_mostwantedrealestate&filter_a1search=Ihsan_Sencan&filter_a1type=0&filter_a1minprice=&filter_a1maxprice=&filter_a1locality=0&filter_a1minbed=0&filter_a1minbaths=&filter_a1minarea=&filter_a1maxarea=&filter_a1minland=&filter_a1maxland=&filter_a1landtype=0&which_order=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_mostwantedrealestate&filter_a1search=Ihsan_Sencan&filter_a1type=0&filter_a1minprice=&filter_a1maxprice=&filter_a1locality=0&filter_a1minbed=0&filter_a1minbaths=&filter_a1minarea=&filter_a1maxarea=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_mostwantedrealestate&filter_a1search=Ihsan_Sencan&filter_a1type=0&filter_a1minprice=&filter_a1maxprice=&filter_a1locality=0&filter_a1minbed=0&filter_a1minbaths=&filter_a1minarea=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_awdwall&task=gethovercard&wuid=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_osproperty&view=ltype&catIds[0]=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_bazaar&view=productsearch&searchproduct=a&category=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_bazaar&view=productsearch&searchproduct=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_bazaar&view=product&productid=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_joomloc&view=engine&layout=geo&liste=65&place=dep&ville=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_eshop&view=category&id=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_googlemaplocator&filter_to=a&filter_day=21-02-2017&filter_time=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_joomloc&view=loc&layout=singleloc&site_id=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_osservicesbooking&task=default_showmap&vid=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_osservicesbooking&view=default&category_id=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_osservicesbooking&view=default&category_id=15&employee_id=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_osservicesbooking&view=default&category_id=15&employee_id=&vid=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_wmt_content_timeline&task=returnArticle&id=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_teamdisplay&view=members&filter_category=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_groovygallery&view=images&filter_category=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_groovygallery&view=images&groovy_category=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_spiderfaq&view=spiderfaqmultiple&standcat=0&faq_cats=,2,3,&standcatids=&theme=1&searchform=1&expand=0&Itemid=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_spidercalendar&view=spidercalendar&calendar_id=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_spidercalendar&view=spidercalendar&calendar_id=1&module_id=92&date92=2017-02-3&cat_ids=&Itemid=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_jembedall&downloadfree=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_jembedall&export=articlepdf&id=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_spidercatalog&product_id=40&view=showproduct&page_num=1&back=1&show_category_details=0&display_type=list&show_subcategories=0&show_subcategories_products=0&show_products=1&select_categories=0&Itemid=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_spidercatalog&view=spidercatalog&select_categories=%27123&show_category_details=1&display_type=cell&show_subcategories=1
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_spiderfacebook&task=loginwith&name=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_joomblog&task=tag&tag=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_jsplocation&task=directionview&id=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_jsplocation&task=redirectviewinfo&id=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_jsplocation&view=classic&task=redirectviewinfo&id=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_jegridfolio&view=category_detail&id=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_jetour&view=package_detail&pid=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_jetour&view=package&cid=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_jeticket&view=assign_detail&cid[0]=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_jeawdsong&view=song_detail&id=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_jeawdsong&view=song_detail&id=1&contest_id=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_jedirectory&view=item_detail&ditemid=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_jek2storymultipleform&view=jesubmit&Itemid=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_jevideorate&view=video&cat_id=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_jevideorate&view=video_detail&id=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_jemessenger&view=box_detail&folder=Inbox&task=edit&Itemid=1496&cid[0]=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_jemessenger&view=box_detail&folder=Outbox&task=edit&Itemid=1496&cid[0]=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_jemessenger&view=box_detail&folder=Trash&task=edit&Itemid=1496&cid[0]=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_hbooking&view=roomlisting&temp=hotel&h_id=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_jequoteform&view=form&Itemid=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_jeformcr&view=form&Itemid=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_jeauction&view=event_detail&eid=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_jeclassifyads&view=item_detail&pro_id=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_jequizmanagement&view=question&eid=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_jequizmanagement&view=question_detail&Itemid=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_jepropertyfinder&view=section_detail&sf_id=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_jepropertyfinder&view=userprofile&userId=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_jeportfolio&view=item_detail&d_itemid=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_jeauto&view=item_detail&d_itemid=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_jegallery&view=photo_detail&photo_id=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_soccerbet&view=userbethistory&userid=%27123
+Header : 500 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '123'' at line 1 SQL=SELECT * from #__sb_bets  where id=''123'
+Title : 1064-Error: 1064
+/index.php?option=com_vikbooking&view=availability&room_ids[0]=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_onisquotes&view=quotes&tag=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_soccerbet&view=matches&cat=%27123
+Header : 500 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '123' and  cat_uid IN (SELECT cat_uid FROM  #__sb_games WHERE published =  '1') o' at line 1 SQL=select *  FROM #__sb_categories where  #__sb_categories.published=1  and #__sb_categories.cat_uid=''123' and  cat_uid IN (SELECT cat_uid FROM  #__sb_games WHERE published =  '1') order by cat_order asc LIMIT 0, 20
+Title : 1064-Error: 1064
+/index.php?option=com_onismusic&view=songs&tag=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_onispetitions&view=petitions&tag=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_sponsorwall&task=click&wallid=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_jtagcalendar&format=raw&noframe=1&search=%27123&searchOnly=1
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=option=com_virtuemart&view=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_blog_calendar&modid=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?controller=calendar&format=raw&cat[0]=%27123&task=events
+Header : 404 View not found [name, type, prefix]: article, raw, contentView
+Title : 404-Error: 404
+/index.php?option=com_eventbooking&view=calendar&layout=weekly&date=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_guru&view=gurupcategs&layout=view&Itemid=%27123&lang=en
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_publisher&view=issues&Itemid=%27123&lang=en
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_bt_media&view=list&categories[0]=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/component/enmasse/term?tmpl=component&id=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_payplans&group_id=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_easy_youtube_gallery&view=videos&mycategory=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_memorix&task=result&searchplugin=theme&Itemid=60&ThemeID=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_informations&view=sousthemes&themeid=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_rand&catID=%27123&limit=1&style=1&view=articles&format=raw&Itemid=13
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_rand&catID=1&limit=1&style=1&view=articles&format=raw&Itemid=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_gallery_wd&view=gallerybox&image_id=19&gallery_id=2&theme_id=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_contactformmaker&view=contactformmaker&id=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_spiderfaq&view=spiderfaqmultiple&standcat=0&faq_cats=,2,3,&standcatids=&theme=%27123&searchform=1&expand=0&Itemid=109
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_spiderfaq&view=spiderfaqmultiple&standcat=0&faq_cats=,2,3,&standcatids=&theme=4&searchform=1&expand=0&Itemid=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
+/index.php?option=com_simplephotogallery&view=images&albumid=%27123
+Header : 404 Component not found.
+Title : 404-Error: 404
