@@ -1,3 +1,8 @@
+/modern-booking-slots?task=saveorder&coupon=123"&start=&option=com_modern_booking
+/index.php?option=com_extrasearch&view=details&listing_id=1&establename=%27123
+/index.php?option=com_extrasearch&controller=createusers&establename=%27123
+/index.php?option=com_opencart&route=product/product&product_id=%27123
+/index.php?option=com_jcart&route=product/product&product_id=%27123
 /index.php/en/?option=com_vikrentitems&task=showprc&itemopt=%27123&days=2&pickup=1490790600&release=1490947200&place=%27123&Itemid=132
 /index.php/en/?option=com_vikrentcar&caropt=%27123&days=31&pickup=1490947200&release=1493542800&place=%27123&task=showprc&Itemid=104
 /index.php/en/our-staff?view=employeeslist&ordering=6&filters[group]=%27123&filters[service]=%27123&filters[country]=%27123&filters[state]=%27123
@@ -93,8 +98,3 @@
 /index.php?option=com_jsplocation&task=redirectviewinfo&id=%27123
 /index.php?option=com_jsplocation&view=classic&task=redirectviewinfo&id=%27123
 /index.php?option=com_jegridfolio&view=category_detail&id=%27123
-/index.php?option=com_jetour&view=package_detail&pid=%27123
-/index.php?option=com_jetour&view=package&cid=%27123
-/index.php?option=com_jeticket&view=assign_detail&cid[0]=%27123
-/index.php?option=com_jeawdsong&view=song_detail&id=%27123
-/index.php?option=com_jeawdsong&view=song_detail&id=1&contest_id=%27123

@@ -141,11 +141,12 @@ public class Model {
 					String statusMessage = http.getResponseMessage();
 					driver.get(url + temp);
 					String title = driver.getTitle();
+					String pagesource = driver.getPageSource();
 					
 					if(isCancelled()) break; 
 					
 					if(statusMessage.indexOf("1064") >= 0 || statusMessage.indexOf("SQL") >= 0
-							|| title.indexOf("1064") >= 0 ){
+							|| title.indexOf("1064") >= 0 || pagesource.indexOf("You have an error in your SQL syntax") >= 0){
 						check = true;
 						filemanager.writeLine(url + temp);
 						filemanager.writeLine("Yes " + statusCode);
